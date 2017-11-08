@@ -1,120 +1,11 @@
 
-
-body {
-    font-family: Lato;
-}
-
-h1 {
-    font-family: "Arvo";
-    font-size:35px;
-    color: #464646;
-    margin: 0px;
-    padding: 0px;
-    margin-left: 20px;
-}
-.info{
-    margin-left: 20px;
-}
-.tile {
-    stroke: #FFF;
-    stroke-width: 4;
-}
-
-.yeartext, .tilestext, .brushtext{
-    text-anchor:middle;
-    font-size: 24px;
-    fill: #565656;
-    stroke-width: 0.1px;
-    /*stroke: #e5e5e5;*/
-}
-
-.electoralVotesNote, .votesPercentageNote{
-    text-anchor:middle;
-    font-size: 24px;
-}
-
-.electoralVoteText, .votesPercentageText{
-    font-size: 35px;
-}
-.end{
-    text-anchor:end;
-}
-
-.nomineeInfoText{
-    font-size: 36px;
-}
-.Axis{
-    stroke: #eee;
-    stroke-width: 4;
-}
-.content {
+.sideTable {
     display: inline-block;
-    width: 70%;
+    //width: 50%;
+    float: right;
+    margin-right: 5%;
 }
 
-.sideBar {
-    display: inline-block;
-    width: 30%;
-    float:right;
-}
-
-.electoralVotes{
-    stroke: #eee;
-}
-
-.middlePoint{
-    stroke: #eee;
-}
-
-.fullView{
-    display: inline-block;
-    width: 100%;
-}
-
-.yearChart{
-    stroke: #FFF;
-}
-
-.republican{
-    fill: #de2d26;
-    color: #de2d26;
-    text-anchor:end;
-}
-.democrat{
-    fill: #3182bd;
-    text-anchor:start;
-    color: #3182bd;
-}
-.independent{
-    fill: #45AD6A;
-    color: #45AD6A;
-    text-anchor:start;
-}
-
-.votesPercentage{
-    stroke: #eee;
-}
-
-.highlighted{
-    stroke: #404040;;
-    stroke-width:4;
-}
-
-.brush .selection {
-    fill-opacity: .5;
-}
-
-.selected{
-    stroke: #404040;;
-    stroke-width:4;
-    r:25px;
-}
-
-
-h2{
-    -webkit-margin-before: 5px;
-    -webkit-margin-after:  5px;
-}
 .d3-tip {
     /*line-height: 5;*/
     padding-left: 10px;
@@ -178,10 +69,4 @@ h2{
     top: 50%;
     left: 100%;
 }
-
-h3{
-    text-anchor:middle;
-    font-size: 32px;
-}
-
 
