@@ -9,7 +9,7 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     let actorStats = new ActorStats(movies, "Tom Hanks");
     actorStats.plot();
 
-    let yearChart = new YearChart();
+    let yearChart = new YearChart(movies);
     yearChart.create();
     /*
     let moviesGroupedByRating = d3.nest()
