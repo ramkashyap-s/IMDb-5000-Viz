@@ -1,9 +1,20 @@
 
 .sideTable {
     display: inline-block;
-    //width: 50%;
+    width: 50%;
     float: right;
     margin-right: 5%;
+}
+
+.view {
+    display: inline-block;
+    width: 50%;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
 }
 
 .d3-tip {

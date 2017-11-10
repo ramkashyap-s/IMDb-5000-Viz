@@ -3,22 +3,39 @@ class MovieTable
 {
     constructor(movies)
     {
-        //Todo: List of movies passed needs to depend on the filter criteria specified by the user
-        this.movies = movies.slice(0, 10);  //Just taking 10 movies for now
         this.tableHeaders = ["movie_title", "imdb_score", "budget", "gross"];
         this.columnsSortOrder = [ 0, 0, 0, 0 ];  // Click-counters for each of the 4 columns
+
+        //Todo: List of movies passed needs to depend on the filter criteria specified by the user
+        this.movies = movies.slice(0, 11);  //Just taking 11 movies for now
+
+        let nonEmptyMovies = [];
+
+        //Extract movies without any missing data
+        for(let movieIndex = 0; movieIndex < (this.movies).length; movieIndex++)
+        {
+            let nonEmptyRow = true;
+
+            for(let headerIndex = 0; headerIndex < (this.tableHeaders).length; headerIndex++)
+            {
+                if(!this.movies[movieIndex][this.tableHeaders[headerIndex]])
+                    nonEmptyRow = false;
+            }
+
+            if(nonEmptyRow == true)
+                (nonEmptyMovies).push(this.movies[movieIndex]);
+        }
+
+        //Reset the main list with only non-empty movies
+        this.movies = nonEmptyMovies.slice();
     }
 
     create()
     {
-        console.log(this.movies);
-
         let thead = d3.select("#moviesTable").select("thead");
 
         let theadColumns = thead.selectAll("th")
             .data(this.tableHeaders);
-
-
 
         // Adding sorting functionality to each column
         theadColumns
@@ -53,7 +70,6 @@ class MovieTable
                 this.columnsSortOrder[i] += 1;
                 this.update()   //Update the table contents with sorted data
             });
-
     }
 
     update()
@@ -86,19 +102,11 @@ class MovieTable
 
                 if(i == 3)    // i = 3 for "Gross" column
                 {
-                    if(!d || !currentBudget || d.length == 0 || currentBudget.length == 0)
-                    {
-                        //console.log("Budget/Gross value not available");
-                    }
+                    if(parseInt(d) >= parseInt(currentBudget))  // If Gross >= Budget, then movie was profitable
+                        return "table-success";
                     else
-                    {
-                        if(parseInt(d) >= parseInt(currentBudget))  // If Gross >= Budget, then movie was profitable
-                            return "table-success";
-                        else
-                            return "table-danger"
-                    }
+                        return "table-danger"
                 }
             });
     }
-
 }

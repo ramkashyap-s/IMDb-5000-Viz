@@ -16,7 +16,11 @@
 
 <body>
 
-<h1>Movies from 1916 to 2016</h1>
+<h1 align="center">Movies from 1916 to 2016</h1>
+
+<div class="view">
+
+</div>
 
 <div class="sideTable">
 
@@ -24,7 +28,7 @@
 
     <table id="moviesTable" class="table table-sm table-bordered table-hover table-responsive">
         <thead class="thead-light">
-        <th>Movie Title &nbsp; <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th>Movie Title &nbsp; <i class="fa fa-sort"></i></th>
         <th>IMDB Score &nbsp; <i class="fa fa-sort"></i></th>
         <th>Budget &nbsp; <i class="fa fa-sort"></i></th>
         <th>Gross &nbsp; <i class="fa fa-sort"></i></th>
@@ -36,8 +40,18 @@
 
 </div>
 
-<script type="application/javascript" src="public/js/movieTable.js"></script>
+<div class="view" id="actorStats">
+    <h2>Selected actor's movie ratings (sorted by year):</h2>
+</div>
+
+<div class="view" id="budgetVsRating">
+</div>
+
 <script type="application/javascript" src="public/js/script.js"></script>
+<script type="application/javascript" src="public/js/movieTable.js"></script>
+<!-- <script type="application/javascript" src="public/js/budgetVsRating.js"></script> -->
+<script type="application/javascript" src="public/js/actorStats.js"></script>
+
 
 </body>
 </html>
