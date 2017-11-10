@@ -11,11 +11,11 @@ class YearChart {
 
         // Initializes the svg elements required for this chart
         this.margin = {top: 10, right: 20, bottom: 30, left: 50};
-        this.slider = d3.select(".slider");
+        let filters = d3.select("#filters");
 
         //fetch the svg bounds
-        this.svgBounds = this.slider.node().getBoundingClientRect();
-        this.svgWidth = this.svgBounds.width - this.margin.left - this.margin.right;
+        this.svgBounds = filters.node().getBoundingClientRect();
+        this.svgWidth = (this.svgBounds.width - this.margin.left - this.margin.right)/2;
         this.svgHeight = 100;
 
         //add the svg to the div
@@ -24,8 +24,12 @@ class YearChart {
         //     .attr("height", this.svgHeight)
 
         this.years = [];
-        for(let i=1916;i<=2016; i = i+5){
+        for(let i=1916;i<2016; i = i+5){
             this.years.push(i);
+        }
+        this.ratings = [];
+        for(let i = 1.6; i<9.5; i = i+0.5){
+            this.ratings.push(i);
         }
     };
 
@@ -34,51 +38,147 @@ class YearChart {
     /**
      * Creates a chart with circles representing each election year, populates text content and other required elements for the Year Chart
      */
-    update () {
-        console.log("svgbounds", this.svgBounds);
+    create () {
 
-        let x = d3.scaleLinear()
+        let yearsvg = d3.select("#yearSlider").append("svg")
+            .attr("width", this.svgWidth + this.margin.right*2)
+            .attr("height", this.svgHeight/2)
+        let xyear = d3.scaleLinear()
             .domain([1916, 2016])
-            .range([0, this.svgWidth-this.margin.right])
+            .range([0, this.svgWidth])
             .clamp(true);
 
-        let dispatch = d3.dispatch("sliderChange");
+        let yearslider = yearsvg.append("g")
+            .attr("class", "slider")
+            .attr("transform", "translate(" + this.margin.left/2 + "," + this.svgHeight/4  + ")");
 
-        // let slider = d3.select(".slider")
-        //     .style("width", this.svgWidth);
-        let slider = this.slider;
+        yearslider.append("line")
+            .attr("class", "track")
+            .attr("x1", xyear.range()[0])
+            .attr("x2", xyear.range()[1])
+            //.attr("y", "50%")
+            .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-inset")
+            .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-overlay")
+            .call(d3.drag()
+                .on("start.interrupt", function() { yearslider.interrupt(); })
+                .on("start drag", function() { }));//console.log(xyear.invert(d3.event.xyear)) hue(x.invert(d3.event.x)); }));
+
+        yearslider.insert("g", ".track-overlay")
+            .attr("class", "ticks")
+            .attr("transform", "translate(0," + 18 + ")")
+            .selectAll("text")
+            .data(xyear.ticks(this.years.length))
+            .enter().append("text")
+            .attr("x", xyear)
+            .attr("text-anchor", "middle")
+            .text(function(d) { return d });
+
+        let yearhandle = yearslider.insert("circle", ".track-overlay")
+            .attr("class", "handle")
+            .attr("r", 9);
+
+        yearslider.transition()
+            .duration(750)
+            .tween("hue", function() {
+                //let i = d3.interpolate(0, 70);
+                //return function(t) { hue(i(t)); };
+            });
 
 
-        let sliderTray = slider.append("div")
-            .attr("class", "slider-tray");
 
-        let sliderHandle = slider.append("div")
-            .attr("class", "slider-handle");
+        //ratings slider
 
-        sliderHandle.append("div")
-            .attr("class", "slider-handle-icon")
+        let xrating = d3.scaleLinear()
+            .domain([1.6, 9.0])
+            .range([0, this.svgWidth])
+            .clamp(true);
 
+        let ratingsvg = d3.select("#ratingSlider").append("svg")
+            .attr("width", this.svgWidth + this.margin.right*2)
+            .attr("height", this.svgHeight/2)
 
-        slider.call(d3.drag()
-            .on("start.interrupt", function() {
-                dispatch.sliderChange(x.invert(d3.mouse(sliderTray.node())[0]));
-                d3.event.sourceEvent.preventDefault();
-            })
-            .on("drag", function() {
-                dispatch.sliderChange(x.invert(d3.mouse(sliderTray.node())[0]));
-            }));
+        let ratingslider = ratingsvg.append("g")
+            .attr("class", "slider")
+            .attr("transform", "translate(" + this.margin.left/2 + "," + this.svgHeight/4  + ")");
 
-        dispatch.on("sliderChange.slider", function(value) {
-            sliderHandle.style("left", x(value) + "px")
-        });
-        //Style the chart by adding a dashed line that connects all these years.
-        //HINT: Use .lineChart to style this dashed line
-        let textg = this.slider.append('g');
+        ratingslider.append("line")
+            .attr("class", "track")
+            .attr("x1", xrating.range()[0])
+            .attr("x2", xrating.range()[1])
+            //.attr("y", "50%")
+            .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-inset")
+            .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-overlay")
+            .call(d3.drag()
+                .on("start.interrupt", function() { ratingslider.interrupt(); })
+                .on("start drag", function() {
+                    //console.log(xrating.invert(d3.mouse(this)))
+                    //console.log((d3.mouse(this)))
+                }));//console.log(xyear.invert(d3.event.xyear)) hue(x.invert(d3.event.x)); }));
 
+        ratingslider.insert("g", ".track-overlay")
+            .attr("class", "ticks")
+            .attr("transform", "translate(0," + 18 + ")")
+            .selectAll("text")
+            .data(xrating.ticks(this.years.length))
+            .enter().append("text")
+            .attr("x", xrating)
+            .attr("text-anchor", "middle")
+            .text(function(d) { return d });
 
+        let ratinghandle = ratingslider.insert("circle", ".track-overlay")
+            .attr("class", "handle")
+            .attr("r", 9);
+
+        ratingslider.transition()
+            .duration(750)
+            .tween("hue", function() {
+                //let i = d3.interpolate(0, 70);
+                //return function(t) { hue(i(t)); };
+
+            });
+        // console.log("svgbounds", this.svgBounds);
         //
-        // //Append text information of each year right below the corresponding circle
-        // //HINT: Use .yeartext class to style your text elements
+        // let x = d3.scaleLinear()
+        //     .domain([1916, 2016])
+        //     .range([0, this.svgWidth-this.margin.right])
+        //     .clamp(true);
+        //
+        // let dispatch = d3.dispatch("sliderChange");
+        //
+        // // let slider = d3.select(".slider")
+        // //     .style("width", this.svgWidth);
+        // let slider = this.slider;
+        //
+        //
+        // let sliderTray = slider.append("div")
+        //     .attr("class", "slider-tray");
+        //
+        // let sliderHandle = slider.append("div")
+        //     .attr("class", "slider-handle");
+        //
+        // sliderHandle.append("div")
+        //     .attr("class", "slider-handle-icon")
+        //
+        //
+        // slider.call(d3.drag()
+        //     .on("start.interrupt", function() {
+        //         dispatch.sliderChange(x.invert(d3.mouse(sliderTray.node())[0]));
+        //         d3.event.sourceEvent.preventDefault();
+        //     })
+        //     .on("drag", function() {
+        //         dispatch.sliderChange(x.invert(d3.mouse(sliderTray.node())[0]));
+        //     }));
+        //
+        // dispatch.on("sliderChange.slider", function(value) {
+        //     sliderHandle.style("left", x(value) + "px")
+        // });
+        // //labels
+        //
+        // let textg = this.slider.append('g');
         //
         // let svgYearText = this.svg.selectAll('text').data(this.years);
         //
@@ -108,7 +208,6 @@ class YearChart {
     // the update methods of other visualizations
 
 
-    //******* TODO: EXTRA CREDIT *******
     //
     //     let that = this
     //     let brushed = function (d) {
