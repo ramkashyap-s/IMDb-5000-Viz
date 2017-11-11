@@ -171,7 +171,7 @@ class YearChart {
         //genre checkboxes
         let genresvg = d3.select("#genreCheckBox").append("svg")
             .attr("width", this.svgWidth + this.margin.right*2)
-            .attr("height", this.svgHeight*3)
+            .attr("height", this.svgHeight*3.5)
         let genreg = genresvg.append("g")
             .attr("transform", "translate(" + this.margin.left/2 + "," + this.svgHeight/4  + ")");
 
@@ -209,12 +209,25 @@ class YearChart {
             .attr('height', 20)
             .append("xhtml:body")
             .append('label')
-            //.attr('id',function(d,i){ return d; })
-            .text(function(d) { return d; })
-            .html("<label class='inline'><input type='checkbox'><span class='lbl'></span></label>");
+            .html((d) => {return "<label class='inline'><input type='checkbox'>" + "<span class='lbl'></span></label>"});
 
 
 
+        genreg.selectAll("text").data(genrelist).enter()
+            .append('text')
+            .attr('x', function(d,i){
+                if(i >= genrelist.length/2){
+                    return 20 + that.svgWidth/3;
+                }
+                return 20;
+            })
+            .attr('y',  function(d,i){
+                if(i >= genrelist.length/2){
+                    return (i+1 - (genrelist.length/2))*that.svgWidth/genrelist.length;
+                }
+                return (i+1)*that.svgWidth/genrelist.length;
+            })
+            .text(function(d) { return d; });
 
 
 

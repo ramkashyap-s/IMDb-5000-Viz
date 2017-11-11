@@ -17,7 +17,8 @@ class BudgetVsRating
             (rating.values).forEach(function (movie) {
 
                 cx = parseFloat(rating.key);
-                cy = parseInt(movie.budget);
+                //cy = parseInt(movie.budget);
+                cy = parseInt(movie.num_user_for_reviews);
 
                 if(!isNaN(cx) && !isNaN(cy))
                     plotPoints.push({ "cx": cx, "cy": cy }) //Extract and store the points to be plotted
@@ -55,7 +56,7 @@ class BudgetVsRating
             .attr("x", -height/2)
             .attr("dy", "1.50em")
             .attr("text-anchor", "middle")
-            .text("Budget");
+            .text("number of user reviews");
 
         //Add the x Axis
         g.append("g")
