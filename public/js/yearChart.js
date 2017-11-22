@@ -188,7 +188,7 @@ class YearChart {
         })
         let genrelist = [...genreset];
 
-        console.log(genrelist);
+        //console.log(genrelist);
         let that = this;
         genreg.selectAll("foreignObject")
             .data(genrelist).enter()
