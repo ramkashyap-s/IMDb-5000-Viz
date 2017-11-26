@@ -124,6 +124,13 @@
 .track-overlay {
     stroke-linecap: round;
 }
+.rangeSlider {
+    fill: #000;
+    fill-opacity: 0.3;
+}
+.rangeSlider-selected{
+    fill-opacity: 0.5;
+}
 
 .track {
     stroke: #000;
