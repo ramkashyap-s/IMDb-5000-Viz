@@ -38,7 +38,7 @@ class NodeLink{
         let svgnodeLink = d3.select('#canvas')
               .attr("width", this.svgWidth + this.margin.right*2)
               .attr("height", this.svgHeight);
-        console.log("height", this.svgHeight);
+        //console.log("height", this.svgHeight);
         let G = new jsnx.Graph();
 
         // G.addNodesFrom(this.nodes);
@@ -92,7 +92,7 @@ class NodeLink{
             .attr("class", "d3-tip-node")
             .offset([-8, 0])
             .html(function(d) {
-                console.log(this)
+                //console.log(this)
                 return d
             });
 

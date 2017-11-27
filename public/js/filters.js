@@ -231,7 +231,7 @@ class Filters {
             .attr('width', 30)
             .attr('height', 20)
             .append("xhtml:body")
-            .html((d) => {return "<input type='checkbox' value = " + d + " id = i" + d + ">"})
+            .html((d) => {return "<input type='checkbox' value = " + d + " id =" + d + ">"});
 
         // .html((d) => {return "<label class='inline'><input type='checkbox' value = " + d + "><span class='lbl'></span></label>"})
         //     .on("click", function(d, i){
@@ -254,16 +254,24 @@ class Filters {
         // console.log(selectedGenre);
 
         let checked = [];
+
         let filterSubmit = d3.select("#filterSubmit")//.select("button")
             .on("click", function() {
-                let boxes = checkBox.selectAll("input.checkbox:checked");
-                console.log(boxes)
-                console.log(yearSelected);
-                console.log(ratingSelected);
 
-                boxes.each(function() {
-                    checked.push(this.value)
+                checked = [];
+                let currentGenre;
+
+                genrelist.forEach(function (genre) {
+                    currentGenre = document.getElementById(genre);
+
+                    if(currentGenre.checked)
+                        checked.push(currentGenre.getAttribute("value"));
                 });
+
+
+                //console.log(yearSelected);
+                //console.log(ratingSelected);
+
                 console.log(checked)
             });
 
