@@ -76,8 +76,8 @@ class NodeLinkv3{
 
 
         //Creates the graph data structure out of node, edge data
-        force.nodes(that.nodes)
-            .links(that.edges)
+        force.nodes([that.nodes])
+            .links([that.edges])
             .start();
 
         //Create all the line svgs but without locations

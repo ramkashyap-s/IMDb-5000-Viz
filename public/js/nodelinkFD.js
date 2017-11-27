@@ -18,7 +18,7 @@ class NodeLinkFD{
         this.edges = [];
         this.nodes = [];
         this.directors = new Set([]);
-        this.actors = new Set([]);
+        this.actors = new Set();
         this.movietitles = new Set([]);
         /*        (this.data).forEach(function (movie) {
          console.log(movie)
@@ -53,15 +53,20 @@ class NodeLinkFD{
             this.nodes.push({"id": movie.actor_1_name.trim(), "label": movie.actor_1_name.trim(), "group": 2, "color":"red"});
             this.nodes.push({"id": movie.actor_2_name.trim(), "label": movie.actor_2_name.trim(), "group": 2, "color":"red"});
             this.nodes.push({"id": movie.actor_3_name.trim(), "label": movie.actor_3_name.trim(), "group": 2, "color":"red"});
+
+
         },this)
+
+        // let nodenames = new Set(this.nodes.map(d => { return d["id"]}))
+        // console.log(nodenames)
 
         // let x = d3.nest()
         //     .key( (d) => { return d["id"]; } )
         //     .entries(this.nodes);
 
 
-        console.log(this.nodes)
-        console.log(this.edges)
+        // console.log(this.nodes)
+        // console.log(this.edges)
         // this.nodes.forEach(function (node) {
         //     node.source
         // })
@@ -90,10 +95,15 @@ class NodeLinkFD{
                 return d.id;
             }))
             // forceManyBody creates a repulsive force between nodes, keeping them away from each other
-            .force("charge", d3.forceManyBody())
+            .force("charge", d3.forceManyBody().strength(-20))
             // forceCenter acts like gravity, keeping the whole visualization in the middle of the screen
-            .force("center", d3.forceCenter(this.svgWidth / 2, this.svgHeight / 2));
+            .force("center", d3.forceCenter(this.svgWidth / 2, this.svgHeight / 2))
+            .force("forceX", d3.forceX())
+            .force("forceY", d3.forceY())
+            // .force("collide", d3.forceCollide());
+            .force("collide",d3.forceCollide( function(d){return d.r + 8 }).iterations(16) )
 
+        //simulation.stop();
         // First we create the links in their own group that comes before the node group;
         // using groups like layers, the circles will always be on top of the lines
         let linkLayer = svgnodeLink.append("g")
@@ -128,14 +138,26 @@ class NodeLinkFD{
                 .on('mouseout', tip.hide);
 
 
+
+        // simulation.force("center").x(this.svgWidth / 2).y(this.svgHeight / 2);
+        //
+        // simulation.force("collide")
+        //     .strength(1)
+        //     // .radius(function(v) {
+        //     //     return scales.radius(v.degree) + 2;
+        //     // });
+        //
+        // simulation.force("charge").strength(-12);
+
+
         // Now that we have the data, let's give it to the simulation...
         simulation.nodes(this.nodes);
+
         // The tension force (the forceLink that we named "link" above) also needs to know
         // about the link data that we finally have
         simulation.force("link")
             .links(this.edges)
             .distance(10);
-
 
         // Finally, let's tell the simulation how to update the graphics
         simulation.on("tick", function () {

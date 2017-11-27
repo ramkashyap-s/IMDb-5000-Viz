@@ -40,13 +40,20 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
 //graph : node-link
 d3.csv("data/movie_metadata_actor_director.csv", function (error, movies) {
     if (error) throw error;
-//     let nodelink = new NodeLink(movies);
-//     nodelink.update();
+    // let nodelink = new NodeLink(movies);
+    // nodelink.update();
     let nodelinkfd = new NodeLinkFD(movies);
     nodelinkfd.update();
 //     let nodelinkfd = new NodeLinkv3(movies);
 //     nodelinkfd.update();
+
+    let wordcloud = new WordCloud(movies);
+    wordcloud.update();
+
 })
+
+
+
 
 /**
  *  Returns a sorted set of all (unique) actors

@@ -92,16 +92,14 @@ class NodeLink{
             .attr("class", "d3-tip-node")
             .offset([-8, 0])
             .html(function(d) {
-                //console.log(this)
-                return d;
+                //console.log(d)
+                //return "hi";
             });
 
 
         d3.select("#canvas").selectAll(".nodes").call(tool_tip)
             .on('mouseover', tool_tip.show)
             .on('mouseout', tool_tip.hide);
-
-
 
     }
 
