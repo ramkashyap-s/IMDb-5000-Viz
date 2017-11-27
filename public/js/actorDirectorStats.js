@@ -27,7 +27,8 @@ class ActorDirectorStats
 
         let xScale = d3.scaleBand()
             .domain((this.movies).map(d => d["movie_title"]))
-            .range([0, width]);
+            .padding([1])
+            .rangeRound([0, width]);
 
         let yScale = d3.scaleLinear()
             .domain(d3.extent(this.movies, (d) => { return parseFloat(d[this.attribute])}))
@@ -72,7 +73,7 @@ class ActorDirectorStats
         xLabel = xLabel.merge(xLabelEnter)
             .attr("fill", "#000")
             .attr("x", width/2)
-            .attr("y", height*1.6)
+            .attr("y", -7)
             .attr("text-anchor", "middle")
             .text((d) => { return d; });
 
