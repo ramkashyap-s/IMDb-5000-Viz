@@ -6,7 +6,7 @@ class NodeLinkv3{
     constructor(movies){
         //this.movies = movies;
         this.margin = {top: 10, right: 20, bottom: 30, left: 50};
-        this.nodeLink = d3.select("#nodeLink");
+        this.nodeLink = d3v3.select("#nodeLink");
 
         //fetch the svg bounds
         this.svgBounds = this.nodeLink.node().getBoundingClientRect();
@@ -23,13 +23,36 @@ class NodeLinkv3{
     }
 
     update(selectedmovies){
-        // let svgnodeLink = this.nodeLink.append("svg").attr("id","svgNL")
-        //      .attr("width", this.svgWidth + this.margin.right*2)
-        //      .attr("height", this.svgHeight);
+        let that = this;
+        //Set up tooltip
+        let tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function (d) {
+                return  d.id + "</span>";
+            })
+
+        //setting up width and height of svg
+        let svgnodeLink = d3v3.select('#canvas')
+            .attr("width", this.svgWidth )
+            .attr("height", this.svgHeight);
+
+        //calling tool tip
+        // svgnodeLink.call(tip);
+
+        //Set up the force layout
+        let force = d3v3.layout.force()
+            .size([this.svgWidth, this.svgHeight])
+            .charge(-30)
+            .linkDistance(15);
+
+
+        // default data for node links
         if(!selectedmovies){
             selectedmovies = this.movies.slice(0, 50) //default selection
         }
 
+        //creating objects for nodes, edges
         selectedmovies.forEach(function(movie) {
             //edges from movie to director, actor1,2,3
             this.edges.push({"source": movie.movie_title.trim(), "target": movie.director_name.trim()})
@@ -48,41 +71,60 @@ class NodeLinkv3{
         //     .key( (d) => { return d["id"]; } )
         //     .entries(this.nodes);
 
-
         console.log(this.nodes)
         console.log(this.edges)
-        // this.nodes.forEach(function (node) {
-        //     node.source
-        // })
 
 
-        //Set up tooltip
-        let tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function (d) {
-                return  d.id + "</span>";
+        //Creates the graph data structure out of node, edge data
+        force.nodes(that.nodes)
+            .links(that.edges)
+            .start();
+
+        //Create all the line svgs but without locations
+        let link = svgnodeLink.selectAll(".link")
+            .data(this.edges)
+            .enter().append("line")
+            .attr("class", "link")
+
+        //Do the same with the circles for the nodes - no locations
+        let node = svgnodeLink.selectAll(".node")
+            .data(this.nodes)
+            .enter().append("circle")
+            .attr("class", "node")
+            .attr("r", 5)
+            .attr("fill", function (d) {
+                //console.log(d)
+                // return color(d.group);
+                return d.color;
             })
+            .call(force.drag)
+            .call(tip)
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
 
+        //Now we are giving the SVGs co-ordinates - the force layout is generating the co-ordinates
+        // which this code is using to update the attributes of the SVG elements
+        force.on("tick", function () {
+            link.attr("x1", function (d) {
+                return d.source.x;
+            })
+                .attr("y1", function (d) {
+                    return d.source.y;
+                })
+                .attr("x2", function (d) {
+                    return d.target.x;
+                })
+                .attr("y2", function (d) {
+                    return d.target.y;
+                });
 
-        let svgnodeLink = d3.select('#canvas')
-            .attr("width", this.svgWidth )
-            .attr("height", this.svgHeight);
-
-        svgnodeLink.call(tip);
-
-        //Set up the force layout
-        let force = d3v3.layout.force()
-            .charge(-120)
-            .linkDistance(15)
-            .size([this.svgWidth, this.svgHeight]);
-
-        //Append a SVG to the body of the html page. Assign this SVG as an object to svg
-        let svg = d3.select("body").append("svg")
-            .attr("width", this.svgWidth)
-            .attr("height", this.svgHeight);
-
-        
+            node.attr("cx", function (d) {
+                return d.x;
+            })
+                .attr("cy", function (d) {
+                    return d.y;
+                });
+        });
 
 
     }// close update()

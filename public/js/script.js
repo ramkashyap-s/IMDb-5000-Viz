@@ -38,10 +38,10 @@ d3.csv("data/movie_metadata_actor_director.csv", function (error, movies) {
     if (error) throw error;
 //     let nodelink = new NodeLink(movies);
 //     nodelink.update();
-//     let nodelinkfd = new NodeLinkFD(movies);
-//     nodelinkfd.update();
-    let nodelinkfd = new NodeLinkv3(movies);
+    let nodelinkfd = new NodeLinkFD(movies);
     nodelinkfd.update();
+//     let nodelinkfd = new NodeLinkv3(movies);
+//     nodelinkfd.update();
 })
 
 

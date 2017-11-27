@@ -171,3 +171,12 @@
     stroke: #fff;
     stroke-width: 1.5px;
 }
+/*force directed v3*/
+.node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+.link {
+    stroke: #999;
+    stroke-opacity: .6;
+}
