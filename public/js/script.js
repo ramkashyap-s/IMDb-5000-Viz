@@ -77,6 +77,12 @@ function getActors() {
     //Drop undefined value
     actors_set.delete(undefined);
 
+    for(let actor of actors_set)
+    {
+        if(getMoviesFor("actor", actor).length < 2) //Drop actor if involved in less than 2 movies
+            actors_set.delete(actor);
+    }
+
     return actors_set;
 }
 
@@ -86,13 +92,19 @@ function getActors() {
 function getDirectors() {
 
     //Get all directors
-    let directorNames = excelMovies.map(d => { if(d["director_name"] && d["director_name"].trim().length > 0) return d["director_name"];});
+    let directorNames = excelMovies.map(d => { if(d["director_name"] && d["director_name"].trim().length > 0) return d["director_name"]; });
 
     //Merge all actors and sort. Then remove duplicates using set
     let directors_set = new Set(directorNames.sort());
 
     //Drop undefined value
     directors_set.delete(undefined);
+
+    for(let director of directors_set)
+    {
+        if(getMoviesFor("director", director).length < 2) //Drop director if involved in less than 2 movies
+            directors_set.delete(director);
+    }
 
     return directors_set;
 }
@@ -155,9 +167,11 @@ function switchActorDirector(choice) {
  */
 function updateSearchFilter(actorOrDirector) {
 
+    let actorDirectorInput = document.getElementById("actorDirector_name");
     let actorDirectorList = document.getElementById("actorDirector_names");
 
     //Clear existing values
+    actorDirectorInput.value = "";
     actorDirectorList.innerHTML = "";
 
     let frag = document.createDocumentFragment();
@@ -174,6 +188,8 @@ function updateSearchFilter(actorOrDirector) {
 
         //Add actor names to search filter
         document.getElementById("actorDirector_names").appendChild(frag);
+        //Update the input placeholder
+        actorDirectorInput.setAttribute("placeholder", "Search Actor");
     }
     else
     {
@@ -187,6 +203,8 @@ function updateSearchFilter(actorOrDirector) {
 
         //Add director names to search filter
         document.getElementById("actorDirector_names").appendChild(frag);
+        //Update the input placeholder
+        actorDirectorInput.setAttribute("placeholder", "Search Director");
     }
 }
 
@@ -196,32 +214,17 @@ function updateSearchFilter(actorOrDirector) {
 function updateActorOrDirector() {
 
     let name = d3.select("#actorDirector_name").node().value;
-    let movies = [];
     let selectedAttribute = d3.select("#attributes").node().value;
 
     if(document.getElementsByName("actorOrDirector")[0].checked)    //If current radio button selection is "Actor"
     {
-        movies = getMoviesFor("actor", name);
-
-        if(movies.length > 0)
-        {
-            actorDirectorStats = new ActorDirectorStats("Actor", name, movies, selectedAttribute);
-            actorDirectorStats.plot();
-        }
-        else
-            console.log("No movies found for actor " + name);
+        actorDirectorStats = new ActorDirectorStats("Actor", name, getMoviesFor("actor", name), selectedAttribute);
+        actorDirectorStats.plot();
     }
-    else                                                            //If current radio button selection is "Director"
+    else    //If current radio button selection is "Director"
     {
-        movies = getMoviesFor("director", name);
-
-        if(movies.length > 0)
-        {
-            actorDirectorStats = new ActorDirectorStats("Director", name, movies, selectedAttribute);
-            actorDirectorStats.plot();
-        }
-        else
-            console.log("No movies found for director " + name);
+        actorDirectorStats = new ActorDirectorStats("Director", name, getMoviesFor("director", name), selectedAttribute);
+        actorDirectorStats.plot();
     }
 }
 
