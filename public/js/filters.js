@@ -231,8 +231,9 @@ class Filters {
             .attr('width', 30)
             .attr('height', 20)
             .append("xhtml:body")
-            // .html((d) => {return "<label class='inline'><input type='checkbox' value = " + d + "><span class='lbl'></span></label>"})
             .html((d) => {return "<input type='checkbox' value = " + d + " id = i" + d + ">"})
+
+        // .html((d) => {return "<label class='inline'><input type='checkbox' value = " + d + "><span class='lbl'></span></label>"})
         //     .on("click", function(d, i){
         //         //console.log(d3.select("#i"+d).node.checked);
         //         //console.log(d3.select(this).node());
@@ -257,6 +258,9 @@ class Filters {
             .on("click", function() {
                 let boxes = checkBox.selectAll("input.checkbox:checked");
                 console.log(boxes)
+                console.log(yearSelected);
+                console.log(ratingSelected);
+
                 boxes.each(function() {
                     checked.push(this.value)
                 });

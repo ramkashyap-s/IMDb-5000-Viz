@@ -66,13 +66,16 @@ class NodeLink{
             nodeAttr: {
                 r: function(d){
                     if(d.data.group == 0)
-                    return 5;
+                    return 4.5;
                     else return 4;
-                }
-                //title: function(d) { return d.label;}
-
+                },
+                title: function(d) { return d.data.label;},
             },
-
+            withLabels: false,
+            labels: function(d) {
+                console.log(d.data.label);
+                return d.data.label;
+            },
             nodeStyle: {
                 fill: function(d) {
                     //console.log((d))
@@ -84,41 +87,19 @@ class NodeLink{
             edgeStyle: {
                 fill: '#999'
             }
-        });
-/*
-        let G = new jsnx.Graph();
+        },true);
+        let tool_tip = d3.tip()
+            .attr("class", "d3-tip-node")
+            .offset([-8, 0])
+            .html(function(d) {
+                console.log(this)
+                return d
+            });
 
-        G.addNodesFrom([1,2,3,4], {group:0});
-        G.addNodesFrom([5,6,7], {group:1});
-        G.addNodesFrom([8,9,10,11], {group:2});
 
-        G.addPath([1,2,5,6,7,8,11]);
-        G.addEdgesFrom([[1,3],[1,4],[3,4],[2,3],[2,4],[8,9],[8,10],[9,10],[11,10],[11,9]]);
-
-        var color = d3v3.scale.category20();
-        jsnx.draw(G, {
-            element: '#demo-svg',
-            layoutAttr: {
-                charge: -120,
-                linkDistance: 20
-            },
-            nodeAttr: {
-                r: 5,
-                title: function(d) { return d.label;}
-            },
-            nodeStyle: {
-                fill: function(d) {
-                    //console.log(d);
-
-                    return color(d.data.group);
-                },
-                stroke: 'none'
-            },
-            edgeStyle: {
-                fill: '#999'
-            }
-        });
-*/
+        d3.select("#canvas").selectAll(".nodes").call(tool_tip)
+            .on('mouseover', tool_tip.show)
+            .on('mouseout', tool_tip.hide);
 
 
 

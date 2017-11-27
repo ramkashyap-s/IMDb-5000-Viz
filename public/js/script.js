@@ -1,4 +1,5 @@
 d3.csv("data/movie_metadata.csv", function (error, movies) {
+    if (error) throw error;
 
     window.excelMovies = movies;
     window.allActors = getActors();
@@ -29,14 +30,19 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     let budgetVsRating = new BudgetVsRating(moviesGroupedByRating);
     budgetVsRating.plot();
 
-});
-
-//graph : node-link
-d3.csv("data/movie_metadata_actor_director.csv", function (error, movies) {
+    //graph : node-link
+    //d3.csv("data/movie_metadata_actor_director.csv", function (error, movies) {
+//    if (error) throw error;
     let nodelink = new NodeLink(movies);
-    nodelink.update();
+        nodelink.update();
+        // let nodelinkfd = new NodeLinkFD(movies);
+        // nodelinkfd.update();
+
+
 
 });
+
+
 
 /**
  *  Returns a sorted set of all (unique) movies
