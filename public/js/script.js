@@ -4,7 +4,11 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     window.excelMovies = movies;
     window.allActors = getActors();
     window.allDirectors = getDirectors();
-    window.allMovies = getAllMovies();
+    window.allGenres = getGenres();
+
+    window.selectedYears = [];
+    window.selectedRatings = [];
+    window.selectedGenres = [];
 
     //Initialize default values for the actor/director search filter
     updateSearchFilter("actor");
@@ -42,24 +46,6 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
 
 });
 
-
-
-/**
- *  Returns a sorted set of all (unique) movies
- */
-function getAllMovies() {
-
-    //Get all directors
-    let movieNames = excelMovies.map(d => { if(d["movie_title"] && d["movie_title"].trim().length > 0) return d["movie_title"];});
-
-    //Merge all movies and sort. Then remove duplicates using set
-    let movies_set = new Set(movieNames.sort());
-
-    //Drop undefined value
-    movies_set.delete(undefined);
-
-    return movies_set;
-}
 
 /**
  *  Returns a sorted set of all (unique) actors
@@ -107,6 +93,26 @@ function getDirectors() {
     }
 
     return directors_set;
+}
+
+/**
+ *  Returns a sorted set of all (unique) genres
+ */
+function getGenres() {
+
+    let genres_set = new Set();
+
+    excelMovies.forEach((movie) => {
+        let movieGenres = movie["genres"].split("|");
+        movieGenres.forEach((genre) => {
+            genres_set.add(genre);
+        })
+    });
+
+    //Sort the genres
+    genres_set = new Set(Array.from(genres_set).sort());
+
+    return genres_set;
 }
 
 /**
@@ -211,7 +217,7 @@ function updateSearchFilter(actorOrDirector) {
 /**
  *  Update the actor/director trend plot based on selected parameters
  */
-function updateActorOrDirector() {
+function updateTrendPlot() {
 
     let name = d3.select("#actorDirector_name").node().value;
     let selectedAttribute = d3.select("#attributes").node().value;
@@ -239,3 +245,86 @@ function updateAttribute() {
     actorDirectorStats.plot();
 }
 
+/**
+ *  Get the selected year, rating and genre filter values and update the movies table
+ */
+function getFilters() {
+
+    let movies = [];
+
+    selectedGenres = [];
+
+    allGenres.forEach((genre) => {
+        let currentGenre = document.getElementById(genre);
+
+        if(currentGenre.checked)
+            selectedGenres.push(currentGenre.getAttribute("value"));
+    });
+
+    let isYearFilterSet = (selectedYears.length > 0);
+    let isRatingFilterSet = (selectedRatings.length > 0);
+    let isGenreFilterSet = (selectedGenres.length > 0);
+
+    if(isYearFilterSet || isRatingFilterSet || isGenreFilterSet)    //If at least one filter has been set by user
+    {
+        excelMovies.forEach((movie) => {
+
+            let yearMatches = true;
+
+            if(isYearFilterSet)
+            {
+                let currentMovieYear = parseInt(movie["title_year"]);
+                let startYear = selectedYears[0].start;
+                let endYear = selectedYears[0].end;
+
+                if(!isNaN(currentMovieYear))
+                {
+                    if(!(currentMovieYear >= startYear && currentMovieYear <= endYear))
+                        yearMatches = false;
+                }
+            }
+
+            let ratingMatches = false;
+
+            if(isRatingFilterSet)
+            {
+                let currentMovieRating = parseFloat(movie["imdb_score"]);
+                let startRating = selectedRatings[0].start;
+                let endRating = selectedRatings[0].end;
+
+                if(!isNaN(currentMovieRating))
+                {
+                    if(currentMovieRating >= startRating && currentMovieRating <= endRating)
+                        ratingMatches = true;
+                }
+            }
+            else
+            {
+                ratingMatches = true;
+            }
+
+            let genresMatch = false;
+
+            if(isGenreFilterSet)
+            {
+                for(let genreIndex = 0; genreIndex < selectedGenres.length; genreIndex++)
+                {
+                    if(movie["genres"].includes(selectedGenres[genreIndex]))
+                    {
+                        genresMatch = true;
+                        break;
+                    }
+                }
+            }
+
+            if(yearMatches && ratingMatches && genresMatch)
+                movies.push(movie);
+        })
+
+    }
+    else
+    {
+        //If no filters selected
+    }
+
+}

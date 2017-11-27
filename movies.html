@@ -34,7 +34,7 @@
                 <datalist id="actorDirector_names"></datalist>
             </li>
             <li class="nav-item">
-                <button class="btn btn-success" type="button" onclick="updateActorOrDirector()">Update plot</button>
+                <button class="btn btn-success" type="button" onclick="updateTrendPlot()">Update plot</button>
             </li>
             <li class="nav-item">
                 <label style="padding:.5rem;color:#e9ecef" for="attributes">Movie attribute:</label>
@@ -73,7 +73,7 @@
     <div id = "ratingSlider"></div>
     <h3 >Genres</h3>
     <div id = "genreCheckBox"></div>
-    <button id = "filterSubmit" type="button" >Update table</button>
+    <button id = "filterSubmit" type="button" onclick="getFilters()">Update table</button>
 
     <!--button id = "filterSubmit" class="btn btn-success" type="button" >Update table</button-->
 
