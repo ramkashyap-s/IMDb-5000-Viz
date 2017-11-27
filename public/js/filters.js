@@ -100,7 +100,7 @@ class Filters {
             .attr("cursor", "ew-resize");
 
         gYearBrush.call(yearbrush.move)//, [0.3, 0.5].map(xyear));
-        let yearSelected = [];
+
         function brushmoved() {
             let s = d3.event.selection;
             if (s == null) {
@@ -109,9 +109,10 @@ class Filters {
                 //let sx = s.map(xyear.invert);
                 let start = Math.round(xyear.invert(s[0]));
                 let end = Math.round(xyear.invert(s[1]));
-                yearSelected = [];
-                yearSelected.push({start, end})
-                console.log(yearSelected);
+
+                selectedYears = [];
+                selectedYears.push({start, end});
+
                 handle.attr("display", null).attr("transform", function(d, i) { return "translate(" + s[i] + "," + that.svgHeight /4 + ")"; });
             }
         }
@@ -171,7 +172,7 @@ class Filters {
             .attr("cursor", "ew-resize");
 
         gYearBrush.call(ratingBrush.move)//, [0.3, 0.5].map(xyear));
-        let ratingSelected = []
+
         function ratingBrushMoved() {
             let s = d3.event.selection;
             if (s == null) {
@@ -181,9 +182,8 @@ class Filters {
                 //let sx = s.map(xrating.invert);
                 let start = Math.round(xrating.invert(s[0]) * 10) / 10;
                 let end = Math.round(xrating.invert(s[1]) * 10) / 10;
-                ratingSelected = [];
-                ratingSelected.push({start, end})
-                console.log(ratingSelected);
+                selectedRatings = [];
+                selectedRatings.push({start, end});
                 ratingHandle.attr("display", null).attr("transform", function(d, i) { return "translate(" + s[i] + "," + that.svgHeight /4 + ")"; });
             }
         }
@@ -196,20 +196,7 @@ class Filters {
         let genreg = genresvg.append("g")
             .attr("transform", "translate(" + this.margin.left/2 + "," + this.svgHeight/4  + ")");
 
-        //console.log(this.movies[0].genres);
-        let genreset = new Set([]);
-
-        this.movies.forEach(function(movie) {
-            let split = movie.genres.split('|');
-            split.forEach(function (genre) {
-                if (!genreset.has(genre)) {
-                    genreset.add(genre);
-                }
-            })
-        })
-        let genrelist = [...genreset];
-
-        let selectedGenre = new Set([]);
+        let genrelist = Array.from(allGenres);
 
         let checkBox = genreg.selectAll("foreignObject")
 
@@ -231,42 +218,32 @@ class Filters {
             .attr('width', 30)
             .attr('height', 20)
             .append("xhtml:body")
-            .html((d) => {return "<input type='checkbox' value = " + d + " id = i" + d + ">"})
+            .html((d) => {return "<input type='checkbox' value = " + d + " id =" + d + ">"});
 
-        // .html((d) => {return "<label class='inline'><input type='checkbox' value = " + d + "><span class='lbl'></span></label>"})
-        //     .on("click", function(d, i){
-        //         //console.log(d3.select("#i"+d).node.checked);
-        //         //console.log(d3.select(this).node());
-        //         if(d3.select(this).node().checked == true){
-        //             d3.select(this).property('checked', false);
-        //             if (selectedGenre.has(d)) {
-        //                 selectedGenre.delete(d)
-        //             }
-        //             console.log("unchecked" + d)
-        //         }
-        //         else{
-        //             d3.select(this).property('checked', true);
-        //             console.log("checked" + d)
-        //             selectedGenre.add(d)
-        //         }
-        //         console.log(selectedGenre);
-        //     })
-        // console.log(selectedGenre);
 
+        /*
         let checked = [];
+
         let filterSubmit = d3.select("#filterSubmit")//.select("button")
             .on("click", function() {
-                let boxes = checkBox.selectAll("input.checkbox:checked");
-                console.log(boxes)
-                console.log(yearSelected);
-                console.log(ratingSelected);
 
-                boxes.each(function() {
-                    checked.push(this.value)
+                checked = [];
+                let currentGenre;
+
+                genrelist.forEach(function (genre) {
+                    currentGenre = document.getElementById(genre);
+
+                    if(currentGenre.checked)
+                        checked.push(currentGenre.getAttribute("value"));
                 });
+
+
+                //console.log(yearSelected);
+                //console.log(ratingSelected);
+
                 console.log(checked)
             });
-
+        */
 
         genreg.selectAll("text").data(genrelist).enter()
             .append('text')
