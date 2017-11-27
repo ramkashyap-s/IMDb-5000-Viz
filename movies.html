@@ -6,6 +6,7 @@
     <title>Visualization - Project</title>
     <link rel="stylesheet" href="public/css/style.css"/>
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="bower_components/d3v3.js"></script>
     <!-- <script type="text/javascript" src="bower_components/d3/d3.js"></script> -->
     <script type="text/javascript" src="bower_components/d3-tip/index.js"></script>
     <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.9.0/d3-legend.js"></script> -->
@@ -72,7 +73,9 @@
     <div id = "ratingSlider"></div>
     <h3 >Genres</h3>
     <div id = "genreCheckBox"></div>
+    <button id = "filterSubmit" type="button" >Update table</button>
 
+    <!--button id = "filterSubmit" class="btn btn-success" type="button" >Update table</button-->
 
 </div>
 
@@ -93,15 +96,20 @@
     </table>
 
 </div>
-
-<div class="view" id="wordcloud">
+<div id="nodeLink" style="float: left; width: 50%" class = ".row-fluid">
+    <svg id = "canvas" ><!--width = "500" height = "300"--> </svg>
 </div>
 
 <script type="application/javascript" src="public/js/movieTable.js"></script>
-<script type="application/javascript" src="public/js/yearChart.js"></script>
+<script type="application/javascript" src="public/js/filters.js"></script>
 <script type="application/javascript" src="public/js/script.js"></script>
 <script type="application/javascript" src="public/js/budgetVsRating.js"></script>
 <script type="application/javascript" src="public/js/actorDirectorStats.js"></script>
+<script type="application/javascript" src="bower_components/jsnetworkx.js"></script>
+<script type="application/javascript" src="public/js/nodelink.js"></script>
+<script type="application/javascript" src="public/js/nodelinkFD.js"></script>
+
+
 
 
 </body>

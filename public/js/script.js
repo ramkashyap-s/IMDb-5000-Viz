@@ -1,8 +1,10 @@
 d3.csv("data/movie_metadata.csv", function (error, movies) {
+    if (error) throw error;
 
     window.excelMovies = movies;
     window.allActors = getActors();
     window.allDirectors = getDirectors();
+    window.allMovies = getAllMovies();
 
     //Initialize default values for the actor/director search filter
     updateSearchFilter("actor");
@@ -16,8 +18,10 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     movieTable.create();
     movieTable.update();
 
-    let yearChart = new YearChart(movies);
-    yearChart.create();
+    //filters
+    let filters = new Filters(movies);
+    filters.create();
+
 
     let moviesGroupedByRating = d3.nest()
         .key( (d) => { return d["imdb_score"]; } ).sortKeys(d3.ascending)
@@ -26,8 +30,36 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     let budgetVsRating = new BudgetVsRating(moviesGroupedByRating);
     budgetVsRating.plot();
 
+    //graph : node-link
+    //d3.csv("data/movie_metadata_actor_director.csv", function (error, movies) {
+//    if (error) throw error;
+    let nodelink = new NodeLink(movies);
+        nodelink.update();
+        // let nodelinkfd = new NodeLinkFD(movies);
+        // nodelinkfd.update();
+
+
+
 });
 
+
+
+/**
+ *  Returns a sorted set of all (unique) movies
+ */
+function getAllMovies() {
+
+    //Get all directors
+    let movieNames = excelMovies.map(d => { if(d["movie_title"] && d["movie_title"].trim().length > 0) return d["movie_title"];});
+
+    //Merge all movies and sort. Then remove duplicates using set
+    let movies_set = new Set(movieNames.sort());
+
+    //Drop undefined value
+    movies_set.delete(undefined);
+
+    return movies_set;
+}
 
 /**
  *  Returns a sorted set of all (unique) actors
