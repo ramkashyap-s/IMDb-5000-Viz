@@ -93,7 +93,7 @@ class NodeLink{
             .offset([-8, 0])
             .html(function(d) {
                 //console.log(this)
-                return d
+                return d;
             });
 
 
