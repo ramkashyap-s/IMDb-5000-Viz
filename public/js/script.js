@@ -253,7 +253,9 @@ function updateAttribute() {
  *  Update the movies table & node-link diagram based on filter selection
  */
 function processFilters() {
-
+    let movieTable = new MovieTable(getMoviesForFilters());
+    movieTable.create();
+    movieTable.update();
     let nodelinkfd = new NodeLinkFD(getMoviesForFilters());
     nodelinkfd.update();
 

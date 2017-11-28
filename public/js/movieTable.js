@@ -10,26 +10,27 @@ class MovieTable
         //this.movies = movies.slice(0, 11);  //Just taking 11 movies for now
         this.movies = movies;
 
-        let nonEmptyMovies = [];
+        // let nonEmptyMovies = [];
+        //
+        // //Extract movies without any missing data
+        // for(let movieIndex = 0; movieIndex < (this.movies).length; movieIndex++)
+        // {
+        //     let nonEmptyRow = true;
+        //
+        //     //movie_title & director_name are non-empty, so skip those
+        //     for(let headerIndex = 2; headerIndex < (this.tableHeaders).length; headerIndex++)
+        //     {
+        //         if(!this.movies[movieIndex][this.tableHeaders[headerIndex]])
+        //             nonEmptyRow = false;
+        //     }
+        //
+        //     if(nonEmptyRow == true)
+        //         (nonEmptyMovies).push(this.movies[movieIndex]);
+        // }
+        //
+        // //Reset the main list with only non-empty movies
+        // this.movies = nonEmptyMovies.slice();
 
-        //Extract movies without any missing data
-        for(let movieIndex = 0; movieIndex < (this.movies).length; movieIndex++)
-        {
-            let nonEmptyRow = true;
-
-            //movie_title & director_name are non-empty, so skip those
-            for(let headerIndex = 2; headerIndex < (this.tableHeaders).length; headerIndex++)
-            {
-                if(!this.movies[movieIndex][this.tableHeaders[headerIndex]])
-                    nonEmptyRow = false;
-            }
-
-            if(nonEmptyRow == true)
-                (nonEmptyMovies).push(this.movies[movieIndex]);
-        }
-
-        //Reset the main list with only non-empty movies
-        this.movies = nonEmptyMovies.slice();
     }
 
     create()

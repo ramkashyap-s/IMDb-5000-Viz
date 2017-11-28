@@ -43,20 +43,34 @@ class NodeLinkFD{
         }
 
         selectedmovies.forEach(function(movie) {
-
+            //let actorDirectorEquals = 0
             //function to check if a node exists and increment degree
-            function nodeExists(name) {
+            function nodeExists(name, group) {
                 return (that.nodes).some(function(elem) {
-                    if(elem.id === name){
-                        elem.degree++ ;
+                    if(elem.id === name && elem.group != group){
+                        elem.degree++;
+                        elem.color = "purple";
+                        //actorDirectorEquals = 1;
                         return true;
                     }
                     else
                         return false;
                 });
             }
+            // //if director and actor are the same consider them as director
+            // if(movie.director_name.trim() === movie.actor_1_name.trim() || movie.actor_1_name.trim() || movie.actor_1_name.trim()){
+            //         (that.nodes).some(function(elem) {
+            //             if(elem.id === director_name){
+            //             }
+            //             else
+            //                 return false;
+            //         });
+            // }
+
+
+
             //if director doesn't exists add to nodes list
-            let directorDegree = nodeExists(movie.director_name.trim());
+            let directorDegree = nodeExists(movie.director_name.trim(), 1);
             if(!directorDegree){
                 this.nodes.push({"id": movie.director_name.trim(), "group": 1, "color":"orange", "degree": 1});
             }
@@ -115,6 +129,9 @@ class NodeLinkFD{
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function (d) {
+                // if (d.group == 1){
+                //     return  (d.id).slice(1) + ": Degree" + d.degree + "</span>";
+                // } else
                 if(d.group != 0){
                     return  d.id + ": Degree" + d.degree + "</span>";
                 }
@@ -144,8 +161,9 @@ class NodeLinkFD{
             .force("center", d3.forceCenter(this.svgWidth / 2, this.svgHeight / 2))
             .force("forceX", d3.forceX())
             .force("forceY", d3.forceY())
-            .force("collide", d3.forceCollide());
-            // .force("collide",d3.forceCollide( function(d){return d.r + 8 }).iterations(16) )
+            // .force("collide", d3.forceCollide([20]));
+            // .force("collide", d3.forceCollide());
+            .force("collide",d3.forceCollide( function(d){return (d.degree + 6) })); //.iterations(16)
 
         //simulation.stop();
         // First we create the links in their own group that comes before the node group;
@@ -170,7 +188,7 @@ class NodeLinkFD{
             .attr("fill", function (d) {
                 //console.log(d)
                 // return color(d.group);
-                return d.color;
+                 return d.color;
             })
             // This part adds event listeners to each of the nodes; when you click,
             // move, and release the mouse on a node, each of these functions gets called
