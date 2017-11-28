@@ -8,9 +8,9 @@
     overflow: auto;
 }
 
-.view {
-    display: inline-block;
-    width: 50%;
+#moviesTableDiv {
+    height: 500px;
+    overflow: auto;
 }
 
 .line {

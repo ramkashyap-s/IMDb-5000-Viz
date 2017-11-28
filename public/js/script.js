@@ -179,10 +179,12 @@ function getMoviesFor(actorOrDirector, name) {
 }
 
 /**
- *  Check the actor/director radio button selection and call the actor/director search filter updater
+ *  Call the actor/director search filter updater and update the actor/director update button
  */
 function switchActorDirector(choice) {
+
     updateSearchFilter(choice.value);
+    document.getElementById("updateActorDirector").innerText = "Update " + choice.value;
 }
 
 /**
@@ -241,13 +243,19 @@ function updateTrendPlot() {
 
     if(document.getElementsByName("actorOrDirector")[0].checked)    //If current radio button selection is "Actor"
     {
-        actorDirectorStats = new ActorDirectorStats("Actor", name, getMoviesFor("actor", name), selectedAttribute);
-        actorDirectorStats.plot();
+        if(allActors.has(name))
+        {
+            actorDirectorStats = new ActorDirectorStats("Actor", name, getMoviesFor("actor", name), selectedAttribute);
+            actorDirectorStats.plot();
+        }
     }
     else    //If current radio button selection is "Director"
     {
-        actorDirectorStats = new ActorDirectorStats("Director", name, getMoviesFor("director", name), selectedAttribute);
-        actorDirectorStats.plot();
+        if(allDirectors.has(name))
+        {
+            actorDirectorStats = new ActorDirectorStats("Director", name, getMoviesFor("director", name), selectedAttribute);
+            actorDirectorStats.plot();
+        }
     }
 }
 

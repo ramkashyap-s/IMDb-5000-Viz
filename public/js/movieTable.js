@@ -84,7 +84,7 @@ class MovieTable
                 return d;
             })
             .transition()
-            .duration(1500)
+            .duration(500)
             .style("opacity", 1);
     }
 }

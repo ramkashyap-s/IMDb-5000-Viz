@@ -13,7 +13,7 @@ class ActorDirectorStats
     {
         let actorDirectorStats_Div = d3.select("#actorDirectorStats");
 
-        let margin = {top: 20, right: 20, bottom: 100, left: 100},
+        let margin = {top: 20, right: 20, bottom: 100, left: 120},
             svgBounds = actorDirectorStats_Div.node().getBoundingClientRect(),
             width = svgBounds.width - margin.left - margin.right,
             height = 450 - margin.top - margin.bottom;
@@ -51,7 +51,7 @@ class ActorDirectorStats
             .style("opacity", 0)
             .attr("transform", "rotate(-90)")
             .attr("x", -height/2)
-            .attr("y", -width/7)
+            .attr("y", -width/10)
             .attr("text-anchor", "middle")
             .text((d) => { return d; })
             .transition()
