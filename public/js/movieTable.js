@@ -3,11 +3,12 @@ class MovieTable
 {
     constructor(movies)
     {
-        this.tableHeaders = ["movie_title", "imdb_score", "budget", "gross"];
-        this.columnsSortOrder = [ 0, 0, 0, 0 ];  // Click-counters for each of the 4 columns
+        this.tableHeaders = ["movie_title", "director_name", "title_year", "imdb_score", "budget", "gross"];
+        this.columnsSortOrder = [ 0, 0, 0, 0, 0, 0 ];  // Click-counters for each of the 6 columns
 
         //Todo: List of movies passed needs to depend on the filter criteria specified by the user
-        this.movies = movies.slice(0, 11);  //Just taking 11 movies for now
+        //this.movies = movies.slice(0, 11);  //Just taking 11 movies for now
+        this.movies = movies;
 
         let nonEmptyMovies = [];
 
@@ -16,7 +17,8 @@ class MovieTable
         {
             let nonEmptyRow = true;
 
-            for(let headerIndex = 0; headerIndex < (this.tableHeaders).length; headerIndex++)
+            //movie_title & director_name are non-empty, so skip those
+            for(let headerIndex = 2; headerIndex < (this.tableHeaders).length; headerIndex++)
             {
                 if(!this.movies[movieIndex][this.tableHeaders[headerIndex]])
                     nonEmptyRow = false;
@@ -86,7 +88,7 @@ class MovieTable
         let tbodyColumns = tbodyRows.selectAll("td")
             .data( (d) => {
                 return [
-                    d["movie_title"], d["imdb_score"], d["budget"], d["gross"]
+                    d["movie_title"], d["director_name"], d["title_year"], d["imdb_score"], d["budget"], d["gross"]
                 ]
             } );
 
@@ -97,10 +99,10 @@ class MovieTable
         tbodyColumns = tbodyColumns.merge(tbodyColumnsEnter)
             .text( (d) => { return d; } )
             .attr("class", (d, i) => {
-                if(i == 2)
+                if(i == 4)
                     currentBudget = d;
 
-                if(i == 3)    // i = 3 for "Gross" column
+                if(i == 5)    // i = 5 for "Gross" column
                 {
                     if(parseInt(d) >= parseInt(currentBudget))  // If Gross >= Budget, then movie was profitable
                         return "table-success";
