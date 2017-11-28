@@ -8,6 +8,9 @@ class NodeLinkFD{
         this.margin = {top: 10, right: 20, bottom: 30, left: 50};
         this.nodeLink = d3.select("#nodeLink");
 
+        this.legend = d3.select("#legend");
+        this.legendHeight = 50;
+
         //fetch the svg bounds
         this.svgBounds = this.nodeLink.node().getBoundingClientRect();
         this.svgWidth = (this.svgBounds.width - this.margin.right);
@@ -17,57 +20,99 @@ class NodeLinkFD{
         //console.log(this.data[0].movie_title);
         this.edges = [];
         this.nodes = [];
-        this.directors = new Set([]);
-        this.actors = new Set();
-        this.movietitles = new Set([]);
-        /*        (this.data).forEach(function (movie) {
-         console.log(movie)
-         this.edges.push([movie.movie_title.trim(), movie.director_name], [movie.movie_title.trim(), movie.actor_1_name],
-         [movie.movie_title.trim(), movie.actor_2_name],[movie.movie_title.trim(), movie.actor_3_name]);
-         this.nodes.push([movie.movie_title.trim(), {label: movie.movie_title.trim()}, {group:'0'}]);
-         this.nodes.push([movie.director_name, {label: movie.director_name}, {group:'1'}]);//{color:'orange'}
-         this.nodes.push([movie.actor_1_name, {label: movie.actor_1_name}, {group:'2'}]); //{color:'red'}
-         this.nodes.push([movie.actor_2_name, {label: movie.actor_2_name},{group:'2'}]);
-         this.nodes.push([movie.actor_3_name, {label: movie.actor_3_name}, {group:'2'}]);
-         },this)
-         */
+        // this.directors = new Set([]);
+        // this.actors = new Set();
+        // this.movietitles = new Set([]);
     }
 
     update(selectedmovies){
-        // let svgnodeLink = this.nodeLink.append("svg").attr("id","svgNL")
-        //      .attr("width", this.svgWidth + this.margin.right*2)
-        //      .attr("height", this.svgHeight);
+
         let that = this;
+        // create legend
+        let svgLegend = this.legend.select("svg")
+            .attr("width", this.svgWidth)
+            .attr("height", this.legendHeight);
+
+        //let gLegend = svgLegend.append("g");
+
+        let colors = [{"color": "red" , "role" : "Actor"},{"color": "orange", "role" : "Director"},
+                        {"color": "blue" , "role" : "Movie"},{"color": "purple", "role" : "Actor and Director"}];
+
+        let legendCircles = svgLegend.enter().append("circle")
+            .data(colors)
+            .attr("fill", function (d) {
+                return d.color;
+            })
+            .attr("cx", function (d,i) {
+                return i * (that.svgWidth/8) + that.margin.left;
+            })
+            .attr("cy", "50%")
+            .attr("r", 5)
+            .attr("class", "legend");
+
+        let labels = svgLegend.enter().append("text")
+            .data(colors)
+            .attr("x", function (d,i) {
+                return i * (that.svgWidth/8) + that.margin.left*1.5;
+            })
+            .attr("y", "50%")
+            .text("text", function (d) {
+                return d.role;
+            })
+            .attr("class", "legend");
+
+
+
+
+
         if(!selectedmovies){
             selectedmovies = this.movies.slice(0, 70) //default selection
         }
 
         selectedmovies.forEach(function(movie) {
-            //let actorDirectorEquals = 0
+            let sameActorDirector = 0;
+            //check for this current movie if actor and director is the same person and decrement their degree
+            if(movie.director_name.trim() === movie.actor_1_name.trim() ||
+                movie.director_name.trim() === movie.actor_2_name.trim() ||
+                movie.director_name.trim() === movie.actor_3_name.trim()){
+                sameActorDirector = 1;
+                // return (that.nodes).some(function(elem){
+                //     if(elem.id === name) {
+                //         elem.degree = elem.degree - 1 ;
+                //         // elem.color = "purple";
+                //         // elem.group = 4;
+                //     }
+                // })
+            }
+
             //function to check if a node exists and increment degree
             function nodeExists(name, group) {
                 return (that.nodes).some(function(elem) {
+                    //check if a person is both actor and director from the node list
+                    // and assign it a different color and group
                     if(elem.id === name && elem.group != group){
+                        // if(sameActorDirector == 1){
+                        //     elem.degree = elem.degree - 1;
+                        //     sameActorDirector = 0;
+                        //     console.log(group)
+                        //     console.log(elem);
+                        // }
+                        // else{
+                        //     elem.degree++;
+                        // }
                         elem.degree++;
                         elem.color = "purple";
-                        //actorDirectorEquals = 1;
+                        elem.group = 4;
+                        return true;
+                    }
+                    else if(elem.id === name){
+                            elem.degree++;
                         return true;
                     }
                     else
                         return false;
                 });
             }
-            // //if director and actor are the same consider them as director
-            // if(movie.director_name.trim() === movie.actor_1_name.trim() || movie.actor_1_name.trim() || movie.actor_1_name.trim()){
-            //         (that.nodes).some(function(elem) {
-            //             if(elem.id === director_name){
-            //             }
-            //             else
-            //                 return false;
-            //         });
-            // }
-
-
 
             //if director doesn't exists add to nodes list
             let directorDegree = nodeExists(movie.director_name.trim(), 1);
@@ -76,19 +121,19 @@ class NodeLinkFD{
             }
 
             //if actor doesn't exists add to nodes list
-            let actor1Degree = nodeExists(movie.actor_1_name.trim());
+            let actor1Degree = nodeExists(movie.actor_1_name.trim(), 2);
             if(!actor1Degree){
                 this.nodes.push({"id": movie.actor_1_name.trim(), "group": 2, "color":"red", "degree": 1});
             }
 
             //if actor doesn't exists add to nodes list
-            let actor2Degree = nodeExists(movie.actor_2_name.trim());
+            let actor2Degree = nodeExists(movie.actor_2_name.trim(), 2);
             if(!actor2Degree){
                 this.nodes.push({"id": movie.actor_2_name.trim(), "group": 2, "color":"red", "degree": 1});
             }
 
             //if actor doesn't exists add to nodes list
-            let actor3Degree = nodeExists(movie.actor_3_name.trim());
+            let actor3Degree = nodeExists(movie.actor_3_name.trim(), 2);
             if(!actor3Degree){
                 this.nodes.push({"id": movie.actor_3_name.trim(), "group": 2, "color":"red", "degree": 1});
             }
@@ -102,18 +147,9 @@ class NodeLinkFD{
             //nodes data for title, director, actor1,2,3
             this.nodes.push({"id": movie.movie_title.trim(),  "group": 0, "color":"blue", "degree": 1});
 
-            // this.nodes.push({"id": movie.director_name.trim(), "group": 1, "color":"red", "degree": 1});
-            // this.nodes.push({"id": movie.actor_1_name.trim(), "group": 2, "color":"red", "degree": 1});
-            // this.nodes.push({"id": movie.actor_2_name.trim(), "group": 2, "color":"red", "degree": 1});
-            // this.nodes.push({"id": movie.actor_3_name.trim(), "group": 2, "color":"red", "degree": 1});
 
-            //console.log(this.nodes.filter(node => (node.id === movie.actor_1_name.trim())));
-             // if((this.nodes).hasOwnProperty(movie.director_name.trim())){
-             //     console.log(movie.director_name.trim());
-             // }
-            // if(this.nodes.includes(movie.actor_1_name.trim())){
-            //     console.log("hi")
-            // }
+
+
         },this);
 
 
@@ -132,7 +168,7 @@ class NodeLinkFD{
                 // if (d.group == 1){
                 //     return  (d.id).slice(1) + ": Degree" + d.degree + "</span>";
                 // } else
-                if(d.group != 0){
+                if(d.group != 0 && d.degree > 1){
                     return  d.id + ": Degree" + d.degree + "</span>";
                 }
                 else{
@@ -165,23 +201,59 @@ class NodeLinkFD{
             // .force("collide", d3.forceCollide());
             .force("collide",d3.forceCollide( function(d){return (d.degree + 6) })); //.iterations(16)
 
-        //simulation.stop();
         // First we create the links in their own group that comes before the node group;
         // using groups like layers, the circles will always be on top of the lines
+
+        svgnodeLink.selectAll(".links").remove();
+
         let linkLayer = svgnodeLink.append("g")
             .attr("class", "links");
+
         // Now let's create the lines
         let links = linkLayer.selectAll("line")
             .data(this.edges)
-            .enter().append("line");
+
+
+        let linksEnter = links.enter().append("line");
+
+        links.exit().remove();
+
+        links = links.merge(linksEnter);
+
+        links.attr("stroke-width", function (d) {
+            // let sourcewt = that.nodes.getOwnProperty(d.source) ;
+            // let targetwt = that.nodes.getOwnProperty(d.target) ;
+            // sourcewt = (sourcewt > targetwt) ? sourcewt : targetwt;
+            return 1;
+        })
 
         // Now we create the node layer, and the nodes inside it
+        svgnodeLink.selectAll(".nodes").remove();
+
         let nodeLayer = svgnodeLink.append("g")
             .attr("class", "nodes");
-        let nodes = nodeLayer
-            .selectAll("circle")
-            .data(this.nodes)
-            .enter().append("circle")
+
+        /*
+        let nodeLayer = svgnodeLink.selectAll(".nodes");
+
+        let nodeLayerEnter = nodeLayer.enter().append("g");
+
+        nodeLayer.exit().remove();
+
+        nodeLayer = nodeLayerEnter.merge(nodeLayer)
+            .attr("class", "nodes");
+        */
+
+        let nodes = nodeLayer.selectAll("circle")
+            .data(this.nodes);
+
+        let nodesEnter = nodes.enter().append("circle");
+
+        nodes.exit().remove();
+
+        nodes = nodes.merge(nodesEnter);
+
+        nodes
             .attr("r", function(d){
                 return (4 + d.degree);
             })

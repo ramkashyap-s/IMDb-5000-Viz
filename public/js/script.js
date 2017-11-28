@@ -18,9 +18,12 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     actorDirectorStats.plot();
 
     //Render the initial movies table with 10 arbitrary movies
-    window.movieTable = new MovieTable(movies.slice(130, 180));
+    window.movieTable = new MovieTable(movies.slice(130, 145));
     movieTable.create();
     movieTable.update();
+
+    let nodelinkfd = new NodeLinkFD(movies.slice(130,145));
+    nodelinkfd.update();
 
     //Render the movies filters
     let filters = new Filters(movies);
@@ -35,20 +38,10 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
 
 });
 
-//graph : node-link
-d3.csv("data/movie_metadata_actor_director.csv", function (error, movies) {
-    if (error) throw error;
-    // let nodelink = new NodeLink(movies);
-    // nodelink.update();
-    //let nodelinkfd = new NodeLinkFD(movies);
-    //nodelinkfd.update();
-//     let nodelinkfd = new NodeLinkv3(movies);
-//     nodelinkfd.update();
 
-    let wordcloud = new WordCloud(movies);
-    wordcloud.update();
+    // let wordcloud = new WordCloud(movies);
+    // wordcloud.update();
 
-});
 
 
 /**
@@ -258,7 +251,7 @@ function processFilters() {
 
     if(matchingMovies.length > 0)
     {
-        movieTable = new MovieTable(matchingMovies);
+        movieTable = new MovieTable(matchingMovies.slice(0,15));
         movieTable.create();
         movieTable.update();
 
