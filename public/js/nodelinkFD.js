@@ -11,7 +11,7 @@ class NodeLinkFD{
         //fetch the svg bounds
         this.svgBounds = this.nodeLink.node().getBoundingClientRect();
         this.svgWidth = (this.svgBounds.width - this.margin.right);
-        this.svgHeight = 400;
+        this.svgHeight = 500;
 
         this.movies = movies;  //default 50 movies
         //console.log(this.data[0].movie_title);
@@ -37,54 +37,93 @@ class NodeLinkFD{
         // let svgnodeLink = this.nodeLink.append("svg").attr("id","svgNL")
         //      .attr("width", this.svgWidth + this.margin.right*2)
         //      .attr("height", this.svgHeight);
+        let that = this;
         if(!selectedmovies){
-            selectedmovies = this.movies.slice(0, 50) //default selection
+            selectedmovies = this.movies.slice(0, 70) //default selection
         }
 
         selectedmovies.forEach(function(movie) {
+
+            //function to check if a node exists and increment degree
+            function nodeExists(name) {
+                return (that.nodes).some(function(elem) {
+                    if(elem.id === name){
+                        elem.degree++ ;
+                        return true;
+                    }
+                    else
+                        return false;
+                });
+            }
+            //if director doesn't exists add to nodes list
+            let directorDegree = nodeExists(movie.director_name.trim());
+            if(!directorDegree){
+                this.nodes.push({"id": movie.director_name.trim(), "group": 1, "color":"orange", "degree": 1});
+            }
+
+            //if actor doesn't exists add to nodes list
+            let actor1Degree = nodeExists(movie.actor_1_name.trim());
+            if(!actor1Degree){
+                this.nodes.push({"id": movie.actor_1_name.trim(), "group": 2, "color":"red", "degree": 1});
+            }
+
+            //if actor doesn't exists add to nodes list
+            let actor2Degree = nodeExists(movie.actor_2_name.trim());
+            if(!actor2Degree){
+                this.nodes.push({"id": movie.actor_2_name.trim(), "group": 2, "color":"red", "degree": 1});
+            }
+
+            //if actor doesn't exists add to nodes list
+            let actor3Degree = nodeExists(movie.actor_3_name.trim());
+            if(!actor3Degree){
+                this.nodes.push({"id": movie.actor_3_name.trim(), "group": 2, "color":"red", "degree": 1});
+            }
+
             //edges from movie to director, actor1,2,3
-            this.edges.push({"source": movie.movie_title.trim(), "target": movie.director_name.trim()})
-            this.edges.push({"source": movie.movie_title.trim(), "target": movie.actor_1_name.trim()})
-            this.edges.push({"source": movie.movie_title.trim(), "target": movie.actor_2_name.trim()})
-            this.edges.push({"source": movie.movie_title.trim(), "target": movie.actor_3_name.trim()})
+            this.edges.push({"source": movie.movie_title.trim(), "target": movie.director_name.trim()});
+            this.edges.push({"source": movie.movie_title.trim(), "target": movie.actor_1_name.trim()});
+            this.edges.push({"source": movie.movie_title.trim(), "target": movie.actor_2_name.trim()});
+            this.edges.push({"source": movie.movie_title.trim(), "target": movie.actor_3_name.trim()});
+
             //nodes data for title, director, actor1,2,3
-            this.nodes.push({"id": movie.movie_title.trim(), "label": movie.movie_title.trim(), "group": 0, "color":"blue"});
-            this.nodes.push({"id": movie.director_name.trim(), "label": movie.director_name.trim(), "group": 1, "color":"orange"});
-            this.nodes.push({"id": movie.actor_1_name.trim(), "label": movie.actor_1_name.trim(), "group": 2, "color":"red"});
-            this.nodes.push({"id": movie.actor_2_name.trim(), "label": movie.actor_2_name.trim(), "group": 2, "color":"red"});
-            this.nodes.push({"id": movie.actor_3_name.trim(), "label": movie.actor_3_name.trim(), "group": 2, "color":"red"});
+            this.nodes.push({"id": movie.movie_title.trim(),  "group": 0, "color":"blue", "degree": 1});
 
+            // this.nodes.push({"id": movie.director_name.trim(), "group": 1, "color":"red", "degree": 1});
+            // this.nodes.push({"id": movie.actor_1_name.trim(), "group": 2, "color":"red", "degree": 1});
+            // this.nodes.push({"id": movie.actor_2_name.trim(), "group": 2, "color":"red", "degree": 1});
+            // this.nodes.push({"id": movie.actor_3_name.trim(), "group": 2, "color":"red", "degree": 1});
 
-        },this)
+            //console.log(this.nodes.filter(node => (node.id === movie.actor_1_name.trim())));
+             // if((this.nodes).hasOwnProperty(movie.director_name.trim())){
+             //     console.log(movie.director_name.trim());
+             // }
+            // if(this.nodes.includes(movie.actor_1_name.trim())){
+            //     console.log("hi")
+            // }
+        },this);
 
-        // let nodenames = new Set(this.nodes.map(d => { return d["id"]}))
-        // console.log(nodenames)
-
-        // let x = d3.nest()
-        //     .key( (d) => { return d["id"]; } )
-        //     .entries(this.nodes);
 
 
         // console.log(this.nodes)
         // console.log(this.edges)
-        // this.nodes.forEach(function (node) {
-        //     node.source
-        // })
 
+        //Scale for setting up size of the node based on the degree
+        // let rscale = d3.scaleLinear().domain([]).range([]);
 
         //Set up tooltip
         let tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function (d) {
-                return  d.id + "</span>";
-            })
+                return  d.id + ": Degree" + d.degree + "</span>";
+            });
 
-
+        //setting up svg
         let svgnodeLink = d3.select('#canvas')
             .attr("width", this.svgWidth )
             .attr("height", this.svgHeight);
 
+        //calling tool-tip
         svgnodeLink.call(tip);
 
         // Here we create our simulation, and give it some forces to apply to all the nodes:
@@ -100,8 +139,8 @@ class NodeLinkFD{
             .force("center", d3.forceCenter(this.svgWidth / 2, this.svgHeight / 2))
             .force("forceX", d3.forceX())
             .force("forceY", d3.forceY())
-            // .force("collide", d3.forceCollide());
-            .force("collide",d3.forceCollide( function(d){return d.r + 8 }).iterations(16) )
+            .force("collide", d3.forceCollide());
+            // .force("collide",d3.forceCollide( function(d){return d.r + 8 }).iterations(16) )
 
         //simulation.stop();
         // First we create the links in their own group that comes before the node group;
@@ -120,7 +159,9 @@ class NodeLinkFD{
             .selectAll("circle")
             .data(this.nodes)
             .enter().append("circle")
-            .attr("r", 5)
+            .attr("r", function(d){
+                return (4 + d.degree);
+            })
             .attr("fill", function (d) {
                 //console.log(d)
                 // return color(d.group);
