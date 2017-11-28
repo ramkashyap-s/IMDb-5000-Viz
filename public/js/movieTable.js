@@ -3,33 +3,12 @@ class MovieTable
 {
     constructor(movies)
     {
-        this.tableHeaders = ["movie_title", "director_name", "title_year", "imdb_score", "budget", "gross"];
-        this.columnsSortOrder = [ 0, 0, 0, 0, 0, 0 ];  // Click-counters for each of the 6 columns
+        this.tableHeaders = ["movie_title", "director_name", "title_year", "imdb_score", "budget"];
+        this.columnsSortOrder = [ 0, 0, 0, 0, 0];  // Click-counters for each of the 5 columns
 
         //Todo: List of movies passed needs to depend on the filter criteria specified by the user
         //this.movies = movies.slice(0, 11);  //Just taking 11 movies for now
         this.movies = movies;
-
-        let nonEmptyMovies = [];
-
-        //Extract movies without any missing data
-        for(let movieIndex = 0; movieIndex < (this.movies).length; movieIndex++)
-        {
-            let nonEmptyRow = true;
-
-            //movie_title & director_name are non-empty, so skip those
-            for(let headerIndex = 2; headerIndex < (this.tableHeaders).length; headerIndex++)
-            {
-                if(!this.movies[movieIndex][this.tableHeaders[headerIndex]])
-                    nonEmptyRow = false;
-            }
-
-            if(nonEmptyRow == true)
-                (nonEmptyMovies).push(this.movies[movieIndex]);
-        }
-
-        //Reset the main list with only non-empty movies
-        this.movies = nonEmptyMovies.slice();
     }
 
     create()
@@ -88,7 +67,7 @@ class MovieTable
         let tbodyColumns = tbodyRows.selectAll("td")
             .data( (d) => {
                 return [
-                    d["movie_title"], d["director_name"], d["title_year"], d["imdb_score"], d["budget"], d["gross"]
+                    d["movie_title"], d["director_name"], d["title_year"], d["imdb_score"], d["budget"]
                 ]
             } );
 
@@ -97,18 +76,11 @@ class MovieTable
 
         let currentBudget = "";
         tbodyColumns = tbodyColumns.merge(tbodyColumnsEnter)
-            .text( (d) => { return d; } )
-            .attr("class", (d, i) => {
-                if(i == 4)
-                    currentBudget = d;
+            .text( (d) => {
+                if(!d)
+                    return "N/A";
 
-                if(i == 5)    // i = 5 for "Gross" column
-                {
-                    if(parseInt(d) >= parseInt(currentBudget))  // If Gross >= Budget, then movie was profitable
-                        return "table-success";
-                    else
-                        return "table-danger"
-                }
+                return d;
             });
     }
 }
