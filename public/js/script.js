@@ -17,15 +17,14 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     window.actorDirectorStats = new ActorDirectorStats("Actor", "Tom Hanks", getMoviesFor("actor", "Tom Hanks"), "imdb_score");
     actorDirectorStats.plot();
 
-    //Render the selected movies table
-    let movieTable = new MovieTable(movies);
+    //Render the initial movies table with 10 arbitrary movies
+    let movieTable = new MovieTable(movies.slice(0, 10));
     movieTable.create();
     movieTable.update();
 
-    //filters
+    //Render the movies filters
     let filters = new Filters(movies);
     filters.create();
-
 
     let moviesGroupedByRating = d3.nest()
         .key( (d) => { return d["imdb_score"]; } ).sortKeys(d3.ascending)
@@ -34,7 +33,6 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     let budgetVsRating = new BudgetVsRating(moviesGroupedByRating);
     budgetVsRating.plot();
 
-
 });
 
 //graph : node-link
@@ -42,17 +40,15 @@ d3.csv("data/movie_metadata_actor_director.csv", function (error, movies) {
     if (error) throw error;
     // let nodelink = new NodeLink(movies);
     // nodelink.update();
-    let nodelinkfd = new NodeLinkFD(movies);
-    nodelinkfd.update();
+    //let nodelinkfd = new NodeLinkFD(movies);
+    //nodelinkfd.update();
 //     let nodelinkfd = new NodeLinkv3(movies);
 //     nodelinkfd.update();
 
     let wordcloud = new WordCloud(movies);
     wordcloud.update();
 
-})
-
-
+});
 
 
 /**
@@ -254,11 +250,21 @@ function updateAttribute() {
 }
 
 /**
- *  Get the selected year, rating and genre filter values and update the movies table
+ *  Update the movies table & node-link diagram based on filter selection
  */
-function getFilters() {
+function processFilters() {
 
-    let movies = [];
+    let nodelinkfd = new NodeLinkFD(getMoviesForFilters());
+    nodelinkfd.update();
+
+}
+
+/**
+ *  Return matching movies for the selected year, rating and genre filter values
+ */
+function getMoviesForFilters() {
+
+    let matchingMovies = [];
 
     selectedGenres = [];
 
@@ -326,13 +332,10 @@ function getFilters() {
             }
 
             if(yearMatches && ratingMatches && genresMatch)
-                movies.push(movie);
+                matchingMovies.push(movie);
         })
 
     }
-    else
-    {
-        //If no filters selected
-    }
 
+    return matchingMovies;
 }
