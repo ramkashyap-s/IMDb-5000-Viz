@@ -11,7 +11,7 @@ class NodeLinkFD{
         //fetch the svg bounds
         this.svgBounds = this.nodeLink.node().getBoundingClientRect();
         this.svgWidth = (this.svgBounds.width - this.margin.right);
-        this.svgHeight = 500;
+        this.svgHeight = 550;
 
         this.movies = movies;  //default 50 movies
         //console.log(this.data[0].movie_title);
@@ -115,7 +115,12 @@ class NodeLinkFD{
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function (d) {
-                return  d.id + ": Degree" + d.degree + "</span>";
+                if(d.group != 0){
+                    return  d.id + ": Degree" + d.degree + "</span>";
+                }
+                else{
+                    return  d.id + "</span>";
+                }
             });
 
         //setting up svg

@@ -10,7 +10,7 @@ class NodeLink{
         this.svgWidth = (this.svgBounds.width - this.margin.left - this.margin.right);
         this.svgHeight = 400;
 
-        this.data = nodes.slice(0, 50);  //Just taking 11 movies for now
+        this.data = nodes.slice(0, 70);  //Just taking 11 movies for now
         //console.log(this.data[0].movie_title);
         this.edges = [];
         this.nodes = [];
