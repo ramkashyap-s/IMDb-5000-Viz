@@ -81,12 +81,20 @@ class ActorDirectorStats
         let points = g.selectAll("circle")
             .data(this.movies);
 
+        //Initialize tooltip
+        let tip = d3.tip().attr("class", "d3-tip-node").html((d) => { return d["movie_title"].trim() + ": " + d[this.attribute]; });
+
         let pointsEnter = points.enter().append("circle");
         points.exit().remove();
         points = points.merge(pointsEnter)
-            .attr("r", 4)
+            .attr("r", 4.5)
             .attr("cx", (d) => { return xScale(d["movie_title"]); })
             .attr("cy", (d) => { return yScale(d[this.attribute]); });
+
+        //Invoke the tip on the plot points
+        points.call(tip)
+            .on("mouseover", tip.show)
+            .on("mouseout", tip.hide);
 
         //Add the line graph
         let lineGraph = d3.line()

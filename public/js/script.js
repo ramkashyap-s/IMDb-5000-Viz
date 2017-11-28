@@ -18,7 +18,7 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     actorDirectorStats.plot();
 
     //Render the initial movies table with 10 arbitrary movies
-    window.movieTable = new MovieTable(movies.slice(130, 180));
+    window.movieTable = new MovieTable(movies.slice(130, 150));
     movieTable.create();
     movieTable.update();
 
@@ -125,16 +125,23 @@ function getGenres() {
 function getMoviesFor(actorOrDirector, name) {
 
     let movies = [];
+    let movies_set = new Set();
 
     if(actorOrDirector == "actor")
     {
         //Extract movies which involve the selected actor
         excelMovies.forEach((movie) => {
 
-            if(movie["actor_1_name"] == name || movie["actor_2_name"] == name || movie["actor_3_name"] == name)
+            if(!movies_set.has(movie["movie_title"]))   //Avoid movie duplication using set
             {
-                if(!isNaN(parseInt(movie["title_year"])))
-                    movies.push(movie);
+                if(movie["actor_1_name"] == name || movie["actor_2_name"] == name || movie["actor_3_name"] == name)
+                {
+                    if(!isNaN(parseInt(movie["title_year"])))
+                    {
+                        movies_set.add(movie["movie_title"]);
+                        movies.push(movie);
+                    }
+                }
             }
         });
     }
@@ -143,10 +150,16 @@ function getMoviesFor(actorOrDirector, name) {
         //Extract movies which involve the selected director
         excelMovies.forEach((movie) => {
 
-            if(movie["director_name"] == name)
+            if(!movies_set.has(movie["movie_title"]))   //Avoid movie duplication using set
             {
-                if(!isNaN(parseInt(movie["title_year"])))
-                    movies.push(movie);
+                if(movie["director_name"] == name)
+                {
+                    if(!isNaN(parseInt(movie["title_year"])))
+                    {
+                        movies_set.add(movie["movie_title"]);
+                        movies.push(movie);
+                    }
+                }
             }
         });
     }
