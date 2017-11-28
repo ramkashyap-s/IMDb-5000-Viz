@@ -13,7 +13,7 @@ class ActorDirectorStats
     {
         let actorDirectorStats_Div = d3.select("#actorDirectorStats");
 
-        let margin = {top: 20, right: 20, bottom: 100, left: 100},
+        let margin = {top: 20, right: 20, bottom: 100, left: 120},
             svgBounds = actorDirectorStats_Div.node().getBoundingClientRect(),
             width = svgBounds.width - margin.left - margin.right,
             height = 450 - margin.top - margin.bottom;
@@ -36,6 +36,8 @@ class ActorDirectorStats
 
         //Add the y Axis
         d3.select("#yAxis")
+            .transition()
+            .duration(1500)
             .call(d3.axisLeft(yScale));
 
         //Add the y Axis label
@@ -46,15 +48,21 @@ class ActorDirectorStats
         yLabel.exit().remove();
         yLabel = yLabel.merge(yLabelEnter)
             .attr("fill", "#000")
+            .style("opacity", 0)
             .attr("transform", "rotate(-90)")
             .attr("x", -height/2)
-            .attr("y", -width/7)
+            .attr("y", -width/10)
             .attr("text-anchor", "middle")
-            .text((d) => { return d; });
+            .text((d) => { return d; })
+            .transition()
+            .duration(1500)
+            .style("opacity", 1);
 
         //Add the x Axis
         d3.select("#xAxis")
             .attr("transform", "translate(" + 0 + "," + height + ")")
+            .transition()
+            .duration(1500)
             .call(d3.axisBottom(xScale))
             .selectAll("text")
             .style("text-anchor", "end")
@@ -72,21 +80,37 @@ class ActorDirectorStats
         xLabel.exit().remove();
         xLabel = xLabel.merge(xLabelEnter)
             .attr("fill", "#000")
+            .style("opacity", 0)
             .attr("x", width/2)
             .attr("y", -7)
+            .text((d) => { return d; })
             .attr("text-anchor", "middle")
-            .text((d) => { return d; });
+            .transition()
+            .duration(1500)
+            .style("opacity", 1);
 
         //Add the plot points
         let points = g.selectAll("circle")
             .data(this.movies);
 
+        //Initialize tooltip
+        let tip = d3.tip().attr("class", "d3-tip-node").html((d) => { return d["movie_title"].trim() + ": " + d[this.attribute]; });
+
         let pointsEnter = points.enter().append("circle");
         points.exit().remove();
-        points = points.merge(pointsEnter)
-            .attr("r", 4)
+        points = points.merge(pointsEnter);
+
+        points
+            .transition()
+            .duration(1500)
+            .attr("r", 4.5)
             .attr("cx", (d) => { return xScale(d["movie_title"]); })
             .attr("cy", (d) => { return yScale(d[this.attribute]); });
+
+        //Invoke the tip on the plot points
+        points.call(tip)
+            .on("mouseover", tip.show)
+            .on("mouseout", tip.hide);
 
         //Add the line graph
         let lineGraph = d3.line()
@@ -100,6 +124,8 @@ class ActorDirectorStats
         lines.exit().remove();
         lines = lines.merge(linesEnter)
             .attr("class", "line")
+            .transition()
+            .duration(1500)
             .attr("d", lineGraph);
     }
 }

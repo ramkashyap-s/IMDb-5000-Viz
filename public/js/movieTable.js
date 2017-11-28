@@ -76,11 +76,15 @@ class MovieTable
 
         let currentBudget = "";
         tbodyColumns = tbodyColumns.merge(tbodyColumnsEnter)
+            .style("opacity", 0)
             .text( (d) => {
                 if(!d)
                     return "N/A";
 
                 return d;
-            });
+            })
+            .transition()
+            .duration(500)
+            .style("opacity", 1);
     }
 }

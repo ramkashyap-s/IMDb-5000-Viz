@@ -18,7 +18,7 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     actorDirectorStats.plot();
 
     //Render the initial movies table with 10 arbitrary movies
-    window.movieTable = new MovieTable(movies.slice(130, 145));
+    window.movieTable = new MovieTable(movies.slice(130, 150));
     movieTable.create();
     movieTable.update();
 
@@ -118,16 +118,23 @@ function getGenres() {
 function getMoviesFor(actorOrDirector, name) {
 
     let movies = [];
+    let movies_set = new Set();
 
     if(actorOrDirector == "actor")
     {
         //Extract movies which involve the selected actor
         excelMovies.forEach((movie) => {
 
-            if(movie["actor_1_name"] == name || movie["actor_2_name"] == name || movie["actor_3_name"] == name)
+            if(!movies_set.has(movie["movie_title"]))   //Avoid movie duplication using set
             {
-                if(!isNaN(parseInt(movie["title_year"])))
-                    movies.push(movie);
+                if(movie["actor_1_name"] == name || movie["actor_2_name"] == name || movie["actor_3_name"] == name)
+                {
+                    if(!isNaN(parseInt(movie["title_year"])))
+                    {
+                        movies_set.add(movie["movie_title"]);
+                        movies.push(movie);
+                    }
+                }
             }
         });
     }
@@ -136,10 +143,16 @@ function getMoviesFor(actorOrDirector, name) {
         //Extract movies which involve the selected director
         excelMovies.forEach((movie) => {
 
-            if(movie["director_name"] == name)
+            if(!movies_set.has(movie["movie_title"]))   //Avoid movie duplication using set
             {
-                if(!isNaN(parseInt(movie["title_year"])))
-                    movies.push(movie);
+                if(movie["director_name"] == name)
+                {
+                    if(!isNaN(parseInt(movie["title_year"])))
+                    {
+                        movies_set.add(movie["movie_title"]);
+                        movies.push(movie);
+                    }
+                }
             }
         });
     }
@@ -159,10 +172,12 @@ function getMoviesFor(actorOrDirector, name) {
 }
 
 /**
- *  Check the actor/director radio button selection and call the actor/director search filter updater
+ *  Call the actor/director search filter updater and update the actor/director update button
  */
 function switchActorDirector(choice) {
+
     updateSearchFilter(choice.value);
+    document.getElementById("updateActorDirector").innerText = "Update " + choice.value;
 }
 
 /**
@@ -221,13 +236,19 @@ function updateTrendPlot() {
 
     if(document.getElementsByName("actorOrDirector")[0].checked)    //If current radio button selection is "Actor"
     {
-        actorDirectorStats = new ActorDirectorStats("Actor", name, getMoviesFor("actor", name), selectedAttribute);
-        actorDirectorStats.plot();
+        if(allActors.has(name))
+        {
+            actorDirectorStats = new ActorDirectorStats("Actor", name, getMoviesFor("actor", name), selectedAttribute);
+            actorDirectorStats.plot();
+        }
     }
     else    //If current radio button selection is "Director"
     {
-        actorDirectorStats = new ActorDirectorStats("Director", name, getMoviesFor("director", name), selectedAttribute);
-        actorDirectorStats.plot();
+        if(allDirectors.has(name))
+        {
+            actorDirectorStats = new ActorDirectorStats("Director", name, getMoviesFor("director", name), selectedAttribute);
+            actorDirectorStats.plot();
+        }
     }
 }
 

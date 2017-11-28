@@ -16,8 +16,9 @@ class Filters {
 
         //fetch the svg bounds
         this.svgBounds = filters.node().getBoundingClientRect();
-        this.svgWidth = (this.svgBounds.width - this.margin.left - this.margin.right);
-        this.svgHeight = 100;
+        //this.svgWidth = (this.svgBounds.width - this.margin.left - this.margin.right);
+        this.svgWidth = (this.svgBounds.width/2 - this.margin.left - this.margin.right);
+        this.svgHeight = 200;
 
         //add the svg to the div
         // this.svg = slider.append("svg")
@@ -219,31 +220,6 @@ class Filters {
             .attr('height', 20)
             .append("xhtml:body")
             .html((d) => {return "<input type='checkbox' value = " + d + " id =" + d + ">"});
-
-
-        /*
-        let checked = [];
-
-        let filterSubmit = d3.select("#filterSubmit")//.select("button")
-            .on("click", function() {
-
-                checked = [];
-                let currentGenre;
-
-                genrelist.forEach(function (genre) {
-                    currentGenre = document.getElementById(genre);
-
-                    if(currentGenre.checked)
-                        checked.push(currentGenre.getAttribute("value"));
-                });
-
-
-                //console.log(yearSelected);
-                //console.log(ratingSelected);
-
-                console.log(checked)
-            });
-        */
 
         genreg.selectAll("text").data(genrelist).enter()
             .append('text')
