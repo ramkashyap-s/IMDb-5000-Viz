@@ -18,7 +18,7 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     actorDirectorStats.plot();
 
     //Render the initial movies table with 10 arbitrary movies
-    let movieTable = new MovieTable(movies.slice(0, 10));
+    window.movieTable = new MovieTable(movies.slice(130, 180));
     movieTable.create();
     movieTable.update();
 
@@ -253,20 +253,24 @@ function updateAttribute() {
  *  Update the movies table & node-link diagram based on filter selection
  */
 function processFilters() {
-    let movieTable = new MovieTable(getMoviesForFilters());
-    movieTable.create();
-    movieTable.update();
-    let nodelinkfd = new NodeLinkFD(getMoviesForFilters());
-    nodelinkfd.update();
 
+    let matchingMovies = getMoviesForFilters();
+
+    if(matchingMovies.length > 0)
+    {
+        movieTable = new MovieTable(matchingMovies);
+        movieTable.create();
+        movieTable.update();
+
+        let nodelinkfd = new NodeLinkFD(matchingMovies);
+        nodelinkfd.update();
+    }
 }
 
 /**
  *  Return matching movies for the selected year, rating and genre filter values
  */
 function getMoviesForFilters() {
-
-    let matchingMovies = [];
 
     selectedGenres = [];
 
@@ -280,6 +284,9 @@ function getMoviesForFilters() {
     let isYearFilterSet = (selectedYears.length > 0);
     let isRatingFilterSet = (selectedRatings.length > 0);
     let isGenreFilterSet = (selectedGenres.length > 0);
+
+    let matchingMovies = [];
+    let matchingMovies_set = new Set();
 
     if(isYearFilterSet || isRatingFilterSet || isGenreFilterSet)    //If at least one filter has been set by user
     {
@@ -298,9 +305,11 @@ function getMoviesForFilters() {
                     if(!(currentMovieYear >= startYear && currentMovieYear <= endYear))
                         yearMatches = false;
                 }
+                else
+                    yearMatches = false;
             }
 
-            let ratingMatches = false;
+            let ratingMatches = true;
 
             if(isRatingFilterSet)
             {
@@ -310,13 +319,11 @@ function getMoviesForFilters() {
 
                 if(!isNaN(currentMovieRating))
                 {
-                    if(currentMovieRating >= startRating && currentMovieRating <= endRating)
-                        ratingMatches = true;
+                    if(!(currentMovieRating >= startRating && currentMovieRating <= endRating))
+                        ratingMatches = false;
                 }
-            }
-            else
-            {
-                ratingMatches = true;
+                else
+                    ratingMatches = false;
             }
 
             let genresMatch = false;
@@ -332,11 +339,19 @@ function getMoviesForFilters() {
                     }
                 }
             }
+            else
+                genresMatch = true;
+
 
             if(yearMatches && ratingMatches && genresMatch)
-                matchingMovies.push(movie);
+            {
+                if(!matchingMovies_set.has(movie["movie_title"]))   //Avoid movie duplication using set
+                {
+                    matchingMovies_set.add(movie["movie_title"]);
+                    matchingMovies.push(movie);
+                }
+            }
         })
-
     }
 
     return matchingMovies;
