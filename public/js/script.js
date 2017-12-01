@@ -17,15 +17,16 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     window.actorDirectorStats = new ActorDirectorStats("Actor", "Tom Hanks", getMoviesFor("actor", "Tom Hanks"), "imdb_score");
     actorDirectorStats.plot();
 
-    //Render the initial movies table with 10 arbitrary movies
-    window.movieTable = new MovieTable(movies.slice(130, 150));
+    //Render the initial movies table with 50 arbitrary movies
+    window.movieTable = new MovieTable(movies.slice(0, 50));
     movieTable.create();
     movieTable.update();
 
-    let nodelinkfd = new NodeLinkFD(movies.slice(130,145));
+    //Render the initial node-link diagram with 50 arbitrary movies
+    let nodelinkfd = new NodeLinkFD(movies.slice(0, 50));
     nodelinkfd.update();
 
-    //Render the movies filters
+    //Render the filters associated with the movies table & node-link diagram
     let filters = new Filters(movies);
     filters.create();
 
@@ -35,14 +36,10 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
 
     let budgetVsRating = new BudgetVsRating(moviesGroupedByRating);
     budgetVsRating.plot();
-
 });
 
-
-    // let wordcloud = new WordCloud(movies);
-    // wordcloud.update();
-
-
+// let wordcloud = new WordCloud(movies);
+// wordcloud.update();
 
 /**
  *  Returns a sorted set of all (unique) actors
@@ -50,21 +47,34 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
 function getActors() {
 
     //Get all actors
-    let actor1names = excelMovies.map(d => { if(d["actor_1_name"] && d["actor_1_name"].trim().length > 0) return d["actor_1_name"];});
-    let actor2names = excelMovies.map(d => { if(d["actor_2_name"] && d["actor_2_name"].trim().length > 0) return d["actor_2_name"];});
-    let actor3names = excelMovies.map(d => { if(d["actor_3_name"] && d["actor_3_name"].trim().length > 0) return d["actor_3_name"];});
+    let actor1names = excelMovies.map(d => d["actor_1_name"]);
+    let actor2names = excelMovies.map(d => d["actor_2_name"]);
+    let actor3names = excelMovies.map(d => d["actor_3_name"]);
 
-    //Merge all actors and sort. Then remove duplicates using set
-    let actors_set = new Set(actor1names.concat(actor2names, actor3names).sort());
+    //Merge all actors and sort
+    let actor123names = actor1names.concat(actor2names, actor3names).sort();
+
+    let actors_set = new Set();
+    let currentActor = actor123names[0];
+    let currentActorCount = 0;
+
+    for(let actorIndex = 0; actorIndex < actor123names.length; actorIndex++)
+    {
+        if(currentActor == actor123names[actorIndex])
+        {
+            currentActorCount++;
+            if(currentActorCount == 2)  //Include actor if involved in at least 2 movies
+                actors_set.add(currentActor)
+        }
+        else
+        {
+            currentActor = actor123names[actorIndex];
+            currentActorCount = 1;
+        }
+    }
 
     //Drop undefined value
     actors_set.delete(undefined);
-
-    for(let actor of actors_set)
-    {
-        if(getMoviesFor("actor", actor).length < 2) //Drop actor if involved in less than 2 movies
-            actors_set.delete(actor);
-    }
 
     return actors_set;
 }
@@ -75,19 +85,30 @@ function getActors() {
 function getDirectors() {
 
     //Get all directors
-    let directorNames = excelMovies.map(d => { if(d["director_name"] && d["director_name"].trim().length > 0) return d["director_name"]; });
+    let directorNames = excelMovies.map(d => d["director_name"]);
+    let directorNames_sorted = directorNames.sort();    //Sort
 
-    //Merge all actors and sort. Then remove duplicates using set
-    let directors_set = new Set(directorNames.sort());
+    let directors_set = new Set();
+    let currentDirector = directorNames_sorted[0];
+    let currentDirectorCount = 0;
+
+    for(let directorIndex = 0; directorIndex < directorNames_sorted.length; directorIndex++)
+    {
+        if(currentDirector == directorNames_sorted[directorIndex])
+        {
+            currentDirectorCount++;
+            if(currentDirectorCount == 2)  //Include director if involved in at least 2 movies
+                directors_set.add(currentDirector)
+        }
+        else
+        {
+            currentDirector = directorNames_sorted[directorIndex];
+            currentDirectorCount = 1;
+        }
+    }
 
     //Drop undefined value
     directors_set.delete(undefined);
-
-    for(let director of directors_set)
-    {
-        if(getMoviesFor("director", director).length < 2) //Drop director if involved in less than 2 movies
-            directors_set.delete(director);
-    }
 
     return directors_set;
 }
@@ -233,34 +254,29 @@ function updateTrendPlot() {
 
     let name = d3.select("#actorDirector_name").node().value;
     let selectedAttribute = d3.select("#attributes").node().value;
+    let movies = [];
 
     if(document.getElementsByName("actorOrDirector")[0].checked)    //If current radio button selection is "Actor"
     {
-        if(allActors.has(name))
+        if(!name && actorDirectorStats.actorOrDirector == "Actor")  //If name input empty, retrieve name from existing object
+            name = actorDirectorStats.name;
+
+        if(allActors.has(name)) //Ensure actor name passed is valid
         {
-            actorDirectorStats = new ActorDirectorStats("Actor", name, getMoviesFor("actor", name), selectedAttribute);
+            movies = getMoviesFor("actor", name).filter((movie) => movie[selectedAttribute]);
+            actorDirectorStats = new ActorDirectorStats("Actor", name, movies, selectedAttribute);
             actorDirectorStats.plot();
         }
     }
     else    //If current radio button selection is "Director"
     {
-        if(allDirectors.has(name))
+        if(allDirectors.has(name))  //Ensure director name passed is valid
         {
-            actorDirectorStats = new ActorDirectorStats("Director", name, getMoviesFor("director", name), selectedAttribute);
+            movies = getMoviesFor("director", name).filter((movie) => movie[selectedAttribute]);
+            actorDirectorStats = new ActorDirectorStats("Director", name, movies, selectedAttribute);
             actorDirectorStats.plot();
         }
     }
-}
-
-/**
- *  Check the drop-down for the currently selected attribute and update the plot accordingly.
- *  There are 3 attributes that can be selected: imdb_score, gross or budget
- */
-function updateAttribute() {
-
-    let selectedAttribute = d3.select("#attributes").node().value;
-    actorDirectorStats.attribute = selectedAttribute;
-    actorDirectorStats.plot();
 }
 
 /**
@@ -268,11 +284,11 @@ function updateAttribute() {
  */
 function processFilters() {
 
-    let matchingMovies = getMoviesForFilters();
+    let matchingMovies = getMoviesForFilters().slice(0, 100);   //Limiting movies matching search criteria to 100
 
     if(matchingMovies.length > 0)
     {
-        movieTable = new MovieTable(matchingMovies.slice(0,15));
+        movieTable = new MovieTable(matchingMovies);
         movieTable.create();
         movieTable.update();
 
