@@ -30,16 +30,21 @@ class NodeLinkFD{
         let that = this;
         // create legend
         let svgLegend = this.legend.select("svg")
-            .attr("width", this.svgWidth)
+            .attr("width", this.svgWidth*0.75)
             .attr("height", this.legendHeight);
+        // if(this.movies.length > 20){
+            svgLegend.attr("transform", "translate(" + this.margin.left * 2 + ", 0)");
+        // }
 
-        //let gLegend = svgLegend.append("g");
+        let gLegend = svgLegend.append("g");
 
         let colors = [{"color": "red" , "role" : "Actor"},{"color": "orange", "role" : "Director"},
                         {"color": "blue" , "role" : "Movie"},{"color": "purple", "role" : "Actor and Director"}];
 
-        let legendCircles = svgLegend.enter().append("circle")
-            .data(colors)
+        let legendCircles = gLegend.selectAll("circle").data(colors)
+
+        legendCircles.
+            enter().append("circle")
             .attr("fill", function (d) {
                 return d.color;
             })
@@ -50,40 +55,28 @@ class NodeLinkFD{
             .attr("r", 5)
             .attr("class", "legend");
 
-        let labels = svgLegend.enter().append("text")
+        let labels = gLegend.selectAll("text").data(colors)
+
+        labels.
+            enter().append("text")
             .data(colors)
             .attr("x", function (d,i) {
                 return i * (that.svgWidth/8) + that.margin.left*1.5;
             })
-            .attr("y", "50%")
-            .text("text", function (d) {
+            .attr("y", "55%")
+            .text(function (d) {
                 return d.role;
             })
             .attr("class", "legend");
 
 
 
-
-
         if(!selectedmovies){
-            selectedmovies = this.movies.slice(0, 70) //default selection
+            selectedmovies = this.movies.slice(0, 100) //default selection
         }
 
         selectedmovies.forEach(function(movie) {
             let sameActorDirector = 0;
-            //check for this current movie if actor and director is the same person and decrement their degree
-            if(movie.director_name.trim() === movie.actor_1_name.trim() ||
-                movie.director_name.trim() === movie.actor_2_name.trim() ||
-                movie.director_name.trim() === movie.actor_3_name.trim()){
-                sameActorDirector = 1;
-                // return (that.nodes).some(function(elem){
-                //     if(elem.id === name) {
-                //         elem.degree = elem.degree - 1 ;
-                //         // elem.color = "purple";
-                //         // elem.group = 4;
-                //     }
-                // })
-            }
 
             //function to check if a node exists and increment degree
             function nodeExists(name, group) {
@@ -91,15 +84,6 @@ class NodeLinkFD{
                     //check if a person is both actor and director from the node list
                     // and assign it a different color and group
                     if(elem.id === name && elem.group != group){
-                        // if(sameActorDirector == 1){
-                        //     elem.degree = elem.degree - 1;
-                        //     sameActorDirector = 0;
-                        //     console.log(group)
-                        //     console.log(elem);
-                        // }
-                        // else{
-                        //     elem.degree++;
-                        // }
                         elem.degree++;
                         elem.color = "purple";
                         elem.group = 4;
@@ -147,6 +131,19 @@ class NodeLinkFD{
             //nodes data for title, director, actor1,2,3
             this.nodes.push({"id": movie.movie_title.trim(),  "group": 0, "color":"blue", "degree": 1});
 
+            //check for this current movie if actor and director is the same person and decrement their degree
+            if(movie.director_name.trim() === movie.actor_1_name.trim() ||
+                movie.director_name.trim() === movie.actor_2_name.trim() ||
+                movie.director_name.trim() === movie.actor_3_name.trim()){
+                sameActorDirector = 1;
+                return (that.nodes).some(function(elem){
+                    if(elem.id === movie.director_name.trim()) {
+                        elem.degree = elem.degree - 1;
+                    }
+                })
+            }
+
+
 
 
 
@@ -177,6 +174,11 @@ class NodeLinkFD{
             });
 
         //setting up svg
+        // if(this.movies.length < 20){
+        //     console.log(this.movies.length);
+        //     this.svgWidth = this.svgWidth/2;
+        //     this.svgHeight = this.svgHeight/2;
+        // }
         let svgnodeLink = d3.select('#canvas')
             .attr("width", this.svgWidth )
             .attr("height", this.svgHeight);

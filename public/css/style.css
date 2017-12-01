@@ -148,3 +148,10 @@
     stroke: #999;
     stroke-opacity: .6;
 }
+.dummy-handle {
+    opacity: 0.0;
+}
+.nodes {
+opacity: 0.9;
+}
+

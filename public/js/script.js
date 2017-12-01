@@ -18,16 +18,21 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     actorDirectorStats.plot();
 
     //Render the initial movies table with 10 arbitrary movies
-    window.movieTable = new MovieTable(movies.slice(130, 150));
+    window.movieTable = new MovieTable(movies.slice(0, 20));
     movieTable.create();
     movieTable.update();
 
-    let nodelinkfd = new NodeLinkFD(movies.slice(130,145));
+    let nodelinkfd = new NodeLinkFD(movies.slice(0,15));
     nodelinkfd.update();
 
     //Render the movies filters
     let filters = new Filters(movies);
     filters.create();
+
+
+    let wordcloud = new WordCloud(movies);
+    wordcloud.update();
+
 
     let moviesGroupedByRating = d3.nest()
         .key( (d) => { return d["imdb_score"]; } ).sortKeys(d3.ascending)
@@ -38,9 +43,6 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
 
 });
 
-
-    // let wordcloud = new WordCloud(movies);
-    // wordcloud.update();
 
 
 
@@ -60,11 +62,11 @@ function getActors() {
     //Drop undefined value
     actors_set.delete(undefined);
 
-    for(let actor of actors_set)
-    {
-        if(getMoviesFor("actor", actor).length < 2) //Drop actor if involved in less than 2 movies
-            actors_set.delete(actor);
-    }
+    // for(let actor of actors_set)
+    // {
+    //     if(getMoviesFor("actor", actor).length < 2) //Drop actor if involved in less than 2 movies
+    //         actors_set.delete(actor);
+    // }
 
     return actors_set;
 }
@@ -83,11 +85,11 @@ function getDirectors() {
     //Drop undefined value
     directors_set.delete(undefined);
 
-    for(let director of directors_set)
-    {
-        if(getMoviesFor("director", director).length < 2) //Drop director if involved in less than 2 movies
-            directors_set.delete(director);
-    }
+    // for(let director of directors_set)
+    // {
+    //     if(getMoviesFor("director", director).length < 2) //Drop director if involved in less than 2 movies
+    //         directors_set.delete(director);
+    // }
 
     return directors_set;
 }
@@ -272,7 +274,7 @@ function processFilters() {
 
     if(matchingMovies.length > 0)
     {
-        movieTable = new MovieTable(matchingMovies.slice(0,15));
+        movieTable = new MovieTable(matchingMovies);
         movieTable.create();
         movieTable.update();
 
