@@ -9,7 +9,6 @@
     <script src="bower_components/d3v3.js"></script>
     <script src="bower_components/d3.layout.cloud.js"></script>
     <script src="bower_components/d3/d3.js"></script>
-    <!-- <script type="text/javascript" src="bower_components/d3/d3.js"></script> -->
     <script type="text/javascript" src="bower_components/d3-tip/index.js"></script>
     <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.9.0/d3-legend.js"></script> -->
     <link rel="stylesheet" href="public/css/bootstrap-4.0.0-beta.2-dist/css/bootstrap.min.css">
@@ -20,7 +19,7 @@
 
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="text-center font-weight-bold">Movies from 1916 to 2016</h1>
+        <h1 class="text-center display-4">Movies from 1916 to 2016</h1>
     </div>
 </div>
 
@@ -48,7 +47,7 @@
                         <label class="text-white text-center" for="attributes">Update attribute:</label>
                     </div>
                     <div class="col-sm">
-                        <select class="form-control-sm" id="attributes" onchange="updateAttribute()">
+                        <select class="form-control-sm" id="attributes" onchange="updateTrendPlot()">
                             <option selected value="imdb_score">Rating</option>
                             <option value="gross">Gross</option>
                             <option value="budget">Budget</option>
@@ -140,9 +139,7 @@
 <script type="application/javascript" src="public/js/budgetVsRating.js"></script>
 <script type="application/javascript" src="public/js/actorDirectorStats.js"></script>
 <script type="application/javascript" src="bower_components/jsnetworkx.js"></script>
-<script type="application/javascript" src="public/js/nodelink.js"></script>
 <script type="application/javascript" src="public/js/nodelinkFD.js"></script>
-<script type="application/javascript" src="public/js/nodelinkv3.js"></script>
 <script type="application/javascript" src="public/js/wordCloud.js"></script>
 
 

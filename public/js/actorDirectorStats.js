@@ -47,6 +47,7 @@ class ActorDirectorStats
         let yLabelEnter = yLabel.enter().append("text");
         yLabel.exit().remove();
         yLabel = yLabel.merge(yLabelEnter)
+            .attr("class", "font-weight-bold text-capitalize")
             .attr("fill", "#000")
             .style("opacity", 0)
             .attr("transform", "rotate(-90)")
@@ -79,6 +80,7 @@ class ActorDirectorStats
         let xLabelEnter = xLabel.enter().append("text");
         xLabel.exit().remove();
         xLabel = xLabel.merge(xLabelEnter)
+            .attr("class", "font-weight-bold")
             .attr("fill", "#000")
             .style("opacity", 0)
             .attr("x", width/2)
