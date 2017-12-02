@@ -96,7 +96,7 @@
 .nodes circle {
     stroke: #fff;
     stroke-width: 1.5px;
-    opacity: 0.9;
+    opacity: 1;
 }
 /*force directed v3*/
 .node {

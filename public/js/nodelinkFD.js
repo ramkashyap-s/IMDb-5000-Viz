@@ -9,7 +9,7 @@ class NodeLinkFD{
         this.nodeLink = d3.select("#nodeLink");
 
         this.legend = d3.select("#legend");
-        this.legendHeight = 50;
+        this.legendHeight = 60;
 
         //fetch the svg bounds
         this.svgBounds = this.nodeLink.node().getBoundingClientRect();
@@ -30,13 +30,21 @@ class NodeLinkFD{
         let that = this;
         // create legend
         let svgLegend = this.legend.select("svg")
-            .attr("width", this.svgWidth*0.75)
+            .attr("width", this.svgWidth)
             .attr("height", this.legendHeight);
         // if(this.movies.length > 20){
-            svgLegend.attr("transform", "translate(" + this.margin.left * 2 + ", 0)");
+            //svgLegend.attr("transform", "translate(" + this.margin.left + ", 0)");
         // }
 
         let gLegend = svgLegend.append("g");
+
+        svgLegend.append("text").text(["Double click on a node to highlight it's neighbors"])
+            .attr("transform", "translate(" + this.margin.left*1.5 + ", 55)");
+
+        // svgLegend.selectAll(".feature")
+        //     .enter().append("text")
+        //     .text("Double click on the node to highlight neighbors")
+        //     .attr("class","feature");
 
         let colors = [{"color": "red" , "role" : "Actor"},{"color": "orange", "role" : "Director"},
                         {"color": "blue" , "role" : "Movie"},{"color": "purple", "role" : "Role: Actor and Director"}];
@@ -49,7 +57,7 @@ class NodeLinkFD{
                 return d.color;
             })
             .attr("cx", function (d,i) {
-                return i * (that.svgWidth/8) + that.margin.left;
+                return i * (that.svgWidth/7) + that.margin.left;
             })
             .attr("cy", "50%")
             .attr("r", 5)
@@ -61,13 +69,14 @@ class NodeLinkFD{
             enter().append("text")
             .data(colors)
             .attr("x", function (d,i) {
-                return i * (that.svgWidth/8) + that.margin.left*1.2;
+                return i * (that.svgWidth/7) + that.margin.left*1.3;
             })
             .attr("y", "60%")
             .text(function (d) {
                 return d.role;
             })
             .attr("class", "legend");
+
 
 
 
