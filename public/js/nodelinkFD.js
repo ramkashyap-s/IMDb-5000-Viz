@@ -61,7 +61,7 @@ class NodeLinkFD{
             enter().append("text")
             .data(colors)
             .attr("x", function (d,i) {
-                return i * (that.svgWidth/8) + that.margin.left*1.5;
+                return i * (that.svgWidth/8) + that.margin.left*1.2;
             })
             .attr("y", "55%")
             .text(function (d) {

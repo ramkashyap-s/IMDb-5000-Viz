@@ -47,21 +47,55 @@ function getGenres() {
 }
 
 /**
+ *  Select/deselect all genre checkboxes
+ */
+
+function checkAll()
+{
+    if(document.getElementById("checkAll").checked == true) //Select all genres
+    {
+        allGenres.forEach((genre) => {
+            let currentGenre = document.getElementById(genre);
+            currentGenre.checked = true;
+        });
+    }
+    else    //Deselect all genres
+    {
+        allGenres.forEach((genre) => {
+            let currentGenre = document.getElementById(genre);
+            currentGenre.checked = false;
+        });
+    }
+}
+
+/**
  *  Update the movies table & node-link diagram based on filter selection
  */
 function processFilters() {
 
     let matchingMovies = getMoviesForFilters();
-    /*
-    let alertBox = document.getElementById("moviesAlert");
     let errorMessage = "";
+    let messageHeader = document.getElementById("messageHeader");
+    let messageBody = document.getElementById("messageBody");
 
     if(matchingMovies.length > 100)
-        errorMessage = "Matching movies exceeded 100, results trimmed";
-
-    if(matchingMovies.length == 0)
+    {
+        messageHeader.innerText = "Note";
+        messageHeader.setAttribute("class", "text-info");
+        errorMessage = "Matching movies exceeded 100 - results trimmed";
+    }
+    else if(matchingMovies.length == 0)
+    {
+        messageHeader.innerText = "Error";
+        messageHeader.setAttribute("class", "text-danger");
         errorMessage = "No matching movies found for the selected filters";
-    */
+    }
+
+    if(errorMessage)
+    {
+        messageBody.innerText = errorMessage;
+        $('#errorModal').modal('show');
+    }
 
     if(matchingMovies.length > 0)
     {
@@ -72,8 +106,6 @@ function processFilters() {
         let nodelinkfd = new NodeLinkFD(matchingMovies.slice(0, 100));  //Limiting movies matching search criteria to 100
         nodelinkfd.update();
     }
-
-    //alertBox.innerText = errorMessage;
 }
 
 /**

@@ -2,14 +2,17 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
     <title>Visualization - Project</title>
+    <meta charset="UTF-8">
     <!-- External Scripts -->
     <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/jquery-3.2.1.min.js"></script>
+    <script src="bower_components/popper.js"></script>
+    <script src="public/js/bootstrap-4.0.0-beta.2-dist/bootstrap.min.js"></script>
     <script src="bower_components/d3-tip/index.js"></script>
     <!-- Stylesheets -->
     <link rel="stylesheet" href="public/css/style.css"/>
-    <link rel="stylesheet" href="public/css/bootstrap-4.0.0-beta.2-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="public/css/bootstrap-4.0.0-beta.2-dist/bootstrap.min.css">
 </head>
 
 <body>
@@ -19,12 +22,12 @@
                 <a class="nav-link" href="index.html">Trend View</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="explore.html">Explorer View</a>
+                <a class="nav-link" href="explore.html">Explore View</a>
             </li>
         </ul>
     </nav>
 
-    </br></br></br>
+    </br></br></br></br>
 
     <div class="row">
         <div class="col-sm-2"></div>    <!-- Left margin -->
@@ -73,6 +76,30 @@
         </div>
 
         <div class="col-sm-2"></div>    <!-- Right margin -->
+    </div>
+
+    <!-- Modal to display error messages -->
+    <div class="modal fade" id="errorModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title text-danger">Error</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <hr>

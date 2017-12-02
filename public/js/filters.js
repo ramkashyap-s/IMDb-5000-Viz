@@ -48,7 +48,7 @@ class Filters {
         //creating svg for year slider
         let yearsvg = d3.select("#yearSlider").append("svg")
             .attr("width", this.svgWidth + this.margin.right*2)
-            .attr("height", this.svgHeight)
+            .attr("height", this.svgHeight+10)
 
         // setup range for yearslider
         let xyear = d3.scaleLinear()
@@ -141,7 +141,7 @@ class Filters {
         //create svg element for rating slider
         let ratingsvg = d3.select("#ratingSlider").append("svg")
             .attr("width", this.svgWidth + this.margin.right*2)
-            .attr("height", this.svgHeight)
+            .attr("height", this.svgHeight+10)
 
         //creating group for yearslider
         let ratingSlider = ratingsvg.append("g")
@@ -224,50 +224,69 @@ class Filters {
 
         //---------------//genre checkboxes //---------------//
         let genresvg = d3.select("#genreCheckBox").append("svg")
-            .attr("width", this.svgWidth/2)
-            .attr("height", this.svgHeight*6)
-        let genreg = genresvg.append("g")
-        .attr("transform", "translate(0, 5)");
+            .attr("width", this.svgWidth)
+            .attr("height", this.svgHeight*2.5);
+
+        let genreg = genresvg.append("g");
+        //.attr("transform", "translate(0, 5)");
 
         // .attr("transform", "translate(" + this.margin.left/2 + "," + this.svgHeight/4  + ")");
 
         let genrelist = Array.from(allGenres);
+        let checkBox = genreg.selectAll("foreignObject");
 
-        let checkBox = genreg.selectAll("foreignObject")
+        let currentX = 0;
+        let currentY = 0;
 
         checkBox
             .data(genrelist).enter()
             .append("foreignObject")
             .attr('x', function(d,i){
-                if(i >= genrelist.length/2){
-                    return that.svgWidth/4;
+                if(i != 0 && i % 6 == 0){
+                    currentX = currentX + (that.svgWidth/5);
+                    return currentX;
                 }
-                return 0;
+                return currentX;
             })
             .attr('y',  function(d,i){
-                if(i >= genrelist.length/2){
-                    return (i - (genrelist.length/2))*that.svgWidth/genrelist.length;
+                if(i % 6 == 0){
+                    currentY = 0;
+                    return currentY;
                 }
-                return i*that.svgWidth/genrelist.length;
+                else
+                {
+                    currentY += 33;
+                    return currentY;
+                }
             })
             .attr('width', 30)
             .attr('height', 20)
             .append("xhtml:body")
             .html((d) => {return "<input type='checkbox' value = " + d + " id =" + d + ">"});
 
+        currentX = 18;
+        currentY = 0;
+
         genreg.selectAll("text").data(genrelist).enter()
             .append('text')
             .attr('x', function(d,i){
-                if(i >= genrelist.length/2){
-                    return 20 + that.svgWidth/4;
+
+                if(i != 0 && i % 6 == 0){
+                    currentX = currentX + (that.svgWidth/5);
+                    return currentX;
                 }
-                return 20;
+                return currentX;
             })
             .attr('y',  function(d,i){
-                if(i >= genrelist.length/2){
-                    return (i+1 - (genrelist.length/2))*that.svgWidth/genrelist.length;
+                if(i % 6 == 0){
+                    currentY = 15;
+                    return currentY;
                 }
-                return (i+1)*that.svgWidth/genrelist.length;
+                else
+                {
+                    currentY += 33;
+                    return currentY;
+                }
             })
             .text(function(d) { return d; });
 
