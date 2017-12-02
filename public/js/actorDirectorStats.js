@@ -34,6 +34,8 @@ class ActorDirectorStats
             .domain(d3.extent(this.movies, (d) => { return parseFloat(d[this.attribute])}))
             .range([height, 0]);
 
+        yScale.nice();
+
         //Add the y Axis
         d3.select("#yAxis")
             .transition()

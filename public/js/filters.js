@@ -216,7 +216,6 @@ class Filters {
                 let start = Math.round(xrating.invert(s[0]) * 10) / 10;
                 let end = Math.round(xrating.invert(s[1]) * 10) / 10;
                 selectedRatings = [];
-                console.log(start)
                 selectedRatings.push({start, end});
                 ratingHandle.attr("display", null).attr("transform", function(d, i) { return "translate(" + s[i] + "," + that.svgHeight /4 + ")"; });
             }

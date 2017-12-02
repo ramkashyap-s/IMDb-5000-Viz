@@ -74,7 +74,6 @@ class MovieTable
         let tbodyColumnsEnter = tbodyColumns.enter().append("td");
         tbodyColumns.exit().remove();
 
-        let currentBudget = "";
         tbodyColumns = tbodyColumns.merge(tbodyColumnsEnter)
             .style("opacity", 0)
             .text( (d) => {
