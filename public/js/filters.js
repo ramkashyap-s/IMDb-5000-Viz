@@ -18,7 +18,7 @@ class Filters {
         this.svgBounds = filters.node().getBoundingClientRect();
         //this.svgWidth = (this.svgBounds.width - this.margin.left - this.margin.right);
         this.svgWidth = (this.svgBounds.width/2 - this.margin.left - this.margin.right);
-        this.svgHeight = 200;
+        this.svgHeight = 75;
 
         //add the svg to the div
         // this.svg = slider.append("svg")
@@ -67,7 +67,8 @@ class Filters {
         // axis
         yearslider.append("g")
             .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + this.svgHeight/4 + ")")
+            .attr("transform", "translate(0, 40)")
+            // .attr("transform", "translate(0," + this.svgHeight/4 + ")")
             .call(d3.axisBottom(xyear).tickFormat(d3.format("d"))
             );
 
@@ -155,8 +156,8 @@ class Filters {
         // axis
         ratingSlider.append("g")
             .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + this.svgHeight/4 + ")")
-            // .attr("transform", "translate(0," + this.svgHeight/2 + ")")
+            .attr("transform", "translate(0, 40)")
+            // .attr("transform", "translate(0," + this.svgHeight/4 + ")")
             .call(d3.axisBottom(xrating));
 
 
@@ -224,10 +225,12 @@ class Filters {
 
         //---------------//genre checkboxes //---------------//
         let genresvg = d3.select("#genreCheckBox").append("svg")
-            .attr("width", this.svgWidth + this.margin.right*2)
-            .attr("height", this.svgHeight*3)
+            .attr("width", this.svgWidth/2)
+            .attr("height", this.svgHeight*6)
         let genreg = genresvg.append("g")
-            .attr("transform", "translate(" + this.margin.left/2 + "," + this.svgHeight/4  + ")");
+        .attr("transform", "translate(0, 5)");
+
+        // .attr("transform", "translate(" + this.margin.left/2 + "," + this.svgHeight/4  + ")");
 
         let genrelist = Array.from(allGenres);
 
@@ -238,7 +241,7 @@ class Filters {
             .append("foreignObject")
             .attr('x', function(d,i){
                 if(i >= genrelist.length/2){
-                    return that.svgWidth/3;
+                    return that.svgWidth/4;
                 }
                 return 0;
             })
@@ -257,7 +260,7 @@ class Filters {
             .append('text')
             .attr('x', function(d,i){
                 if(i >= genrelist.length/2){
-                    return 20 + that.svgWidth/3;
+                    return 20 + that.svgWidth/4;
                 }
                 return 20;
             })
