@@ -30,8 +30,8 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     let nodelinkfd = new NodeLinkFD(movies.slice(0, 50));
     nodelinkfd.update();
 
-    //let wordcloud = new WordCloud(movies);
-    //wordcloud.update();
+    // let wordcloud = new WordCloud(movies);
+    // wordcloud.update();
 
 
     let moviesGroupedByRating = d3.nest()
