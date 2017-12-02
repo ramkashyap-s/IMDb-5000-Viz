@@ -12,6 +12,7 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     window.actorDirectorStats = new ActorDirectorStats("Actor", "Tom Hanks", getMoviesFor("actor", "Tom Hanks"), "imdb_score");
     actorDirectorStats.plot();
 
+
     let moviesGroupedByRating = d3.nest()
         .key( (d) => { return d["imdb_score"]; } ).sortKeys(d3.ascending)
         .entries(movies);

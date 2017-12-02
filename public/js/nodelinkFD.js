@@ -39,7 +39,7 @@ class NodeLinkFD{
         let gLegend = svgLegend.append("g");
 
         let colors = [{"color": "red" , "role" : "Actor"},{"color": "orange", "role" : "Director"},
-                        {"color": "blue" , "role" : "Movie"},{"color": "purple", "role" : "Actor and Director"}];
+                        {"color": "blue" , "role" : "Movie"},{"color": "purple", "role" : "Role: Actor and Director"}];
 
         let legendCircles = gLegend.selectAll("circle").data(colors)
 
@@ -55,7 +55,7 @@ class NodeLinkFD{
             .attr("r", 5)
             .attr("class", "legend");
 
-        let labels = gLegend.selectAll("text").data(colors)
+        let labels = gLegend.selectAll("text").data(colors);
 
         labels.
             enter().append("text")
@@ -63,7 +63,7 @@ class NodeLinkFD{
             .attr("x", function (d,i) {
                 return i * (that.svgWidth/8) + that.margin.left*1.2;
             })
-            .attr("y", "55%")
+            .attr("y", "60%")
             .text(function (d) {
                 return d.role;
             })
@@ -143,10 +143,6 @@ class NodeLinkFD{
                 })
             }
 
-
-
-
-
         },this);
 
 
@@ -203,6 +199,7 @@ class NodeLinkFD{
             // .force("collide", d3.forceCollide());
             .force("collide",d3.forceCollide( function(d){return (d.degree + 6) })); //.iterations(16)
 
+
         // First we create the links in their own group that comes before the node group;
         // using groups like layers, the circles will always be on top of the lines
 
@@ -216,6 +213,7 @@ class NodeLinkFD{
             .data(this.edges)
 
 
+
         let linksEnter = links.enter().append("line");
 
         links.exit().remove();
@@ -226,14 +224,20 @@ class NodeLinkFD{
             // let sourcewt = that.nodes.getOwnProperty(d.source) ;
             // let targetwt = that.nodes.getOwnProperty(d.target) ;
             // sourcewt = (sourcewt > targetwt) ? sourcewt : targetwt;
-            return 1;
-        })
+            let result = (that.nodes).filter(function(node){
+                //console.log(node.id + d.target);
+                return node.id == d.target;
+            });
+            //console.log(result);
+            return Math.sqrt(result[0].degree);
+        });
 
         // Now we create the node layer, and the nodes inside it
         svgnodeLink.selectAll(".nodes").remove();
 
         let nodeLayer = svgnodeLink.append("g")
             .attr("class", "nodes");
+
 
         /*
         let nodeLayer = svgnodeLink.selectAll(".nodes");
@@ -273,29 +277,19 @@ class NodeLinkFD{
                 .on("end", dragended))
                 .call(tip)
                 .on('mouseover', tip.show)
-                .on('mouseout', tip.hide);
+                .on('mouseout', tip.hide)
+                .on('dblclick', connectedNodes); //Added code;
 
 
-
-        // simulation.force("center").x(this.svgWidth / 2).y(this.svgHeight / 2);
-        //
-        // simulation.force("collide")
-        //     .strength(1)
-        //     // .radius(function(v) {
-        //     //     return scales.radius(v.degree) + 2;
-        //     // });
-        //
-        // simulation.force("charge").strength(-12);
-
-
-        // Now that we have the data, let's give it to the simulation...
+        // Binding data, to the simulation...
         simulation.nodes(this.nodes);
 
         // The tension force (the forceLink that we named "link" above) also needs to know
         // about the link data that we finally have
         simulation.force("link")
             .links(this.edges)
-            .distance(10);
+            .distance(15);
+
 
         // Finally, let's tell the simulation how to update the graphics
         simulation.on("tick", function () {
@@ -341,6 +335,45 @@ class NodeLinkFD{
         d.fy = null;
     }
 
-    }// close update()
+        //---Insert-------
+
+        //Toggle stores whether the highlighting is on
+        let flag = 0;
+        //Create a connections array
+        let linkedByIndex = {};
+        for (let i = 0; i < this.nodes.length; i++) {
+            linkedByIndex[i + "," + i] = 1;
+        };
+        this.edges.forEach(function (d) {
+            linkedByIndex[d.source.index + "," + d.target.index] = 1;
+        });
+
+        //This function looks up whether a pair are neighbours
+        function isConnected(a, b) {
+            return linkedByIndex[a.index + "," + b.index];
+        }
+
+        function connectedNodes() {
+
+            if (flag == 0) {
+                //Reduce the opacity of all nodes except the neighbouring nodes
+                let d = d3.select(this).node().__data__;
+                nodes.style("opacity", function (o) {
+                    return ((isConnected(d, o) || isConnected(o, d)) ? 1 : 0.1);
+                });
+
+                links.style("opacity", function (o) {
+                    return ((d.index == o.source.index || d.index == o.target.index) ? 1 : 0.1);
+                });
+                flag = 1;
+            } else {
+                //Changing back to opacity=1
+                nodes.style("opacity", 1);
+                links.style("opacity", 1);
+                flag = 0;
+            }
+        }
+
+        }// close update()
 
 }//close class
