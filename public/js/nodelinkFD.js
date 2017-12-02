@@ -55,13 +55,13 @@ class NodeLinkFD{
             .attr("r", 5)
             .attr("class", "legend");
 
-        let labels = gLegend.selectAll("text").data(colors)
+        let labels = gLegend.selectAll("text").data(colors);
 
         labels.
             enter().append("text")
             .data(colors)
             .attr("x", function (d,i) {
-                return i * (that.svgWidth/8) + that.margin.left*1.3;
+                return i * (that.svgWidth/8) + that.margin.left*1.2;
             })
             .attr("y", "60%")
             .text(function (d) {

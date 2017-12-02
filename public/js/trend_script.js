@@ -216,6 +216,8 @@ function updateTrendPlot() {
     let name = d3.select("#actorDirector_name").node().value;
     let selectedAttribute = d3.select("#attributes").node().value;
     let movies = [];
+    let errorMessage = "";
+    let errorDiv = document.getElementsByClassName("modal-body")[0];
 
     if(document.getElementsByName("actorOrDirector")[0].checked)    //If current radio button selection is "Actor"
     {
@@ -228,6 +230,12 @@ function updateTrendPlot() {
             actorDirectorStats = new ActorDirectorStats("Actor", name, movies, selectedAttribute);
             actorDirectorStats.plot();
         }
+        else
+        {
+            errorMessage = "Invalid Actor name";
+            errorDiv.innerText = errorMessage;
+            $('#errorModal').modal('show');
+        }
     }
     else    //If current radio button selection is "Director"
     {
@@ -236,6 +244,12 @@ function updateTrendPlot() {
             movies = getMoviesFor("director", name).filter((movie) => movie[selectedAttribute]);
             actorDirectorStats = new ActorDirectorStats("Director", name, movies, selectedAttribute);
             actorDirectorStats.plot();
+        }
+        else
+        {
+            errorMessage = "Invalid Director name";
+            errorDiv.innerText = errorMessage;
+            $('#errorModal').modal('show');
         }
     }
 }
