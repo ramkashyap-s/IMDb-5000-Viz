@@ -5,19 +5,17 @@
     <meta charset="UTF-8">
     <title>Visualization - Project</title>
     <link rel="stylesheet" href="public/css/style.css"/>
-    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
     <script src="bower_components/d3v3.js"></script>
     <script src="bower_components/d3.layout.cloud.js"></script>
     <script src="bower_components/d3/d3.js"></script>
     <script type="text/javascript" src="bower_components/d3-tip/index.js"></script>
-    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.9.0/d3-legend.js"></script> -->
     <link rel="stylesheet" href="public/css/bootstrap-4.0.0-beta.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="public/css/font-awesome-4.7.0/css/font-awesome.min.css"/>
 </head>
 
 <body>
 
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid" style="padding:0.25em">
     <div class="container">
         <h1 class="text-center display-4">Movies from 1916 to 2016</h1>
     </div>
@@ -87,14 +85,16 @@
         <h3 class="text-sm-left">Selected Rating(s): </h3>
     </div>
 </div>
-</br>
+
 <div class="row">
     <div class="col-sm-4">
         <div class="h-75" id="genreCheckBox">
             <h3 class="text-sm-left">Select Genres</h3>
         </div>
-        <div class="h-25 pl-3">
+        <div class="h-12 pl-3">
             <button class="btn-lg btn-primary" id="filterSubmit" type="button" onclick="processFilters()">Update table & node-link diagram</button>
+        </div>
+        <div class="h-13 alert alert-success" id="moviesAlert">
         </div>
     </div>
 
@@ -103,11 +103,13 @@
         <div id="moviesTableDiv">
             <table id="moviesTable" class="table table-sm table-bordered table-hover table-responsive row-fluid float-right">
                 <thead class="thead-light">
-                    <th>Movie Title &nbsp; <i class="fa fa-sort"></i></th>
-                    <th>Director &nbsp; <i class="fa fa-sort"></i></th>
-                    <th>Year &nbsp; <i class="fa fa-sort"></i></th>
-                    <th>IMDB Score &nbsp; <i class="fa fa-sort"></i></th>
-                    <th>Budget &nbsp; <i class="fa fa-sort"></i></th>
+                    <tr>
+                        <th>Movie Title &nbsp; <i class="fa fa-sort"></i></th>
+                        <th>Director &nbsp; <i class="fa fa-sort"></i></th>
+                        <th>Year &nbsp; <i class="fa fa-sort"></i></th>
+                        <th>IMDB Score &nbsp; <i class="fa fa-sort"></i></th>
+                        <th>Budget &nbsp; <i class="fa fa-sort"></i></th>
+                    </tr>
                 </thead>
 
                 <tbody>

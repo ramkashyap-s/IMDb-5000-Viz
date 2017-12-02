@@ -286,17 +286,29 @@ function updateTrendPlot() {
  */
 function processFilters() {
 
-    let matchingMovies = getMoviesForFilters().slice(0, 100);   //Limiting movies matching search criteria to 100
+    let matchingMovies = getMoviesForFilters();
+    /*
+    let alertBox = document.getElementById("moviesAlert");
+    let errorMessage = "";
+
+    if(matchingMovies.length > 100)
+        errorMessage = "Matching movies exceeded 100, results trimmed";
+
+    if(matchingMovies.length == 0)
+        errorMessage = "No matching movies found for the selected filters";
+    */
 
     if(matchingMovies.length > 0)
     {
-        movieTable = new MovieTable(matchingMovies);
+        movieTable = new MovieTable(matchingMovies.slice(0, 100));  //Limiting movies matching search criteria to 100
         movieTable.create();
         movieTable.update();
 
-        let nodelinkfd = new NodeLinkFD(matchingMovies);
+        let nodelinkfd = new NodeLinkFD(matchingMovies.slice(0, 100));  //Limiting movies matching search criteria to 100
         nodelinkfd.update();
     }
+
+    //alertBox.innerText = errorMessage;
 }
 
 /**
