@@ -190,7 +190,7 @@ class NodeLinkFD{
                 return d.id;
             }))
             // forceManyBody creates a repulsive force between nodes, keeping them away from each other
-            .force("charge", d3.forceManyBody().strength(-20))
+            .force("charge", d3.forceManyBody().strength(-17))
             // forceCenter acts like gravity, keeping the whole visualization in the middle of the screen
             .force("center", d3.forceCenter(this.svgWidth / 2, this.svgHeight / 2))
             .force("forceX", d3.forceX())
