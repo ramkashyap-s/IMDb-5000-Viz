@@ -21,8 +21,6 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     movieTable.create();
     movieTable.update();
 
-    //let wordcloud = new WordCloud(movies);
-    //wordcloud.update();
 });
 
 

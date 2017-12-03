@@ -12,6 +12,9 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     window.actorDirectorStats = new ActorDirectorStats("Actor", "Tom Hanks", getMoviesFor("actor", "Tom Hanks"), "imdb_score");
     actorDirectorStats.plot();
 
+    // let wordcloud = new WordCloud(getMoviesFor("actor", "Tom Hanks"));
+    // wordcloud.update();
+
     let plotMovies = movies.map((d) => {
         return {"imdb_score": d["imdb_score"], "gross": d["gross"], "duration": d["duration"],
             "num_user_for_reviews": d["num_user_for_reviews"], "movie_facebook_likes": d["movie_facebook_likes"]};
@@ -244,6 +247,11 @@ function updateTrendPlot() {
             movies = getMoviesFor("actor", name).filter((movie) => movie[selectedAttribute]);
             actorDirectorStats = new ActorDirectorStats("Actor", name, movies, selectedAttribute);
             actorDirectorStats.plot();
+
+
+            // let wordcloud = new WordCloud(movies);
+            // wordcloud.update();
+
         }
         else
         {
