@@ -118,6 +118,7 @@ class Filters {
                     gYearBrush.call(yearbrush.move, [xyear(2000) , xyear(2016)]);
                     let start = 2000;
                     let end = 2016;
+                    selectedYears = [];
                     selectedYears.push({start,end});
                     updateYearsText(start, end);
                 }
@@ -129,6 +130,7 @@ class Filters {
                 //let sx = s.map(xyear.invert);
                 let start = Math.round(xyear.invert(s[0]));
                 let end = Math.round(xyear.invert(s[1]));
+                selectedYears = [];
                 selectedYears.push({start, end});
                 updateYearsText(start, end);
                 handle.attr("display", null).attr("transform", function(d, i) { return "translate(" + s[i] + "," + that.svgHeight /4 + ")"; });
@@ -221,6 +223,7 @@ class Filters {
                     gRatingBrush.call(ratingBrush.move, [xrating(8.2) , xrating(9.5)]);
                     let start = 8.2;
                     let end = 9.5;
+                    selectedRatings = []
                     selectedRatings.push({start , end});
                     updateRatingsText(start, end);
                 }
@@ -234,6 +237,7 @@ class Filters {
             else{
                 let start = Math.round(xrating.invert(s[0]) * 10) / 10;
                 let end = Math.round(xrating.invert(s[1]) * 10) / 10;
+                selectedRatings = []
                 selectedRatings.push({start, end});
                 updateRatingsText(start, end);
                 ratingHandle.attr("display", null).attr("transform", function(d, i) { return "translate(" + s[i] + "," + that.svgHeight /4 + ")"; });
