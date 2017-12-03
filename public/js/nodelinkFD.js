@@ -47,7 +47,7 @@ class NodeLinkFD{
         //     .attr("class","feature");
 
         let colors = [{"color": "red" , "role" : "Actor"},{"color": "orange", "role" : "Director"},
-                        {"color": "blue" , "role" : "Movie"},{"color": "purple", "role" : "Role: Actor and Director"}];
+                        {"color": "blue" , "role" : "Movie"},{"color": "greenyellow", "role" : "Role: Actor and Director"}];
 
         let legendCircles = gLegend.selectAll("circle").data(colors)
 
@@ -69,7 +69,7 @@ class NodeLinkFD{
             enter().append("text")
             .data(colors)
             .attr("x", function (d,i) {
-                return i * (that.svgWidth/7) + that.margin.left*1.3;
+                return i * (that.svgWidth/7) + that.margin.left*1.2;
             })
             .attr("y", "60%")
             .text(function (d) {
@@ -94,7 +94,7 @@ class NodeLinkFD{
                     // and assign it a different color and group
                     if(elem.id === name && elem.group != group){
                         elem.degree++;
-                        elem.color = "purple";
+                        elem.color = "greenyellow";
                         elem.group = 4;
                         return true;
                     }

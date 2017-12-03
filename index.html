@@ -10,6 +10,9 @@
     <script src="bower_components/popper.js"></script>
     <script src="public/js/bootstrap-4.0.0-beta.2-dist/bootstrap.min.js"></script>
     <script src="bower_components/d3-tip/index.js"></script>
+    <script src="bower_components/d3v3.js"></script>
+    <script src="bower_components/d3.layout.cloud.js"></script>
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="public/css/style.css"/>
     <link rel="stylesheet" href="public/css/bootstrap-4.0.0-beta.2-dist/bootstrap.min.css">
@@ -102,6 +105,13 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-sm-4 float-sm-left" id="wordCloud">
+            <svg id="wordcanvas"></svg>
+        </div>
+    </div>
+
+
     <hr>
 
     <div class="row">
@@ -114,5 +124,7 @@
     <script src="public/js/trend_script.js"></script>
     <script src="public/js/actorDirectorStats.js"></script>
     <script src="public/js/budgetVsRating.js"></script>
+    <script type="application/javascript" src="public/js/wordCloud.js"></script>
+
 </body>
 </html>
