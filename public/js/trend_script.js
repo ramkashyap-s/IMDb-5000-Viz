@@ -12,17 +12,18 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     window.actorDirectorStats = new ActorDirectorStats("Actor", "Tom Hanks", getMoviesFor("actor", "Tom Hanks"), "imdb_score");
     actorDirectorStats.plot();
 
-    // let wordcloud = new WordCloud(getMoviesFor("actor", "Tom Hanks"));
-    // wordcloud.update();
+    //Render the wordCloud for the default actor
+    //let wordCloud = new WordCloud(getMoviesFor("actor", "Tom Hanks"));
+    //wordCloud.update();
 
+    //Prepare data for scatter plots
     let plotMovies = movies.map((d) => {
-        return {"imdb_score": d["imdb_score"], "gross": d["gross"], "duration": d["duration"],
-            "num_user_for_reviews": d["num_user_for_reviews"], "movie_facebook_likes": d["movie_facebook_likes"]};
+        return {"imdb_score": d["imdb_score"], "gross": d["gross"], "num_user_for_reviews": d["num_user_for_reviews"]};
     });
 
-    //Plot budget Vs rating
-    let budgetVsRating = new ScatterPlot(plotMovies);
-    budgetVsRating.plot("budgetVsRating", "gross", "Gross");
+    //Plot gross Vs rating
+    let grossVsRating = new ScatterPlot(plotMovies);
+    grossVsRating.plot("grossVsRating", "gross", "Gross");
 
     //Plot number of user reviews Vs rating
     let reviewsVsRating = new ScatterPlot(plotMovies);
@@ -248,10 +249,8 @@ function updateTrendPlot() {
             actorDirectorStats = new ActorDirectorStats("Actor", name, movies, selectedAttribute);
             actorDirectorStats.plot();
 
-
-            // let wordcloud = new WordCloud(movies);
-            // wordcloud.update();
-
+            //let wordCloud = new WordCloud(movies);
+            //wordCloud.update();
         }
         else
         {
@@ -267,6 +266,9 @@ function updateTrendPlot() {
             movies = getMoviesFor("director", name).filter((movie) => movie[selectedAttribute]);
             actorDirectorStats = new ActorDirectorStats("Director", name, movies, selectedAttribute);
             actorDirectorStats.plot();
+
+            //let wordCloud = new WordCloud(movies);
+            //wordCloud.update();
         }
         else
         {

@@ -9,18 +9,19 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     window.selectedGenres = [];
 
     //Render the filters associated with the movies table & node-link diagram
-    let filters = new Filters(movies);
+    let filters = new Filters();
     filters.create();
 
+    let initialMovies = getMoviesForFilters();
+
     //Render the initial node-link diagram with 50 arbitrary movies
-    let nodelinkfd = new NodeLinkFD(movies.slice(0, 50));
+    let nodelinkfd = new NodeLinkFD(initialMovies.slice(0, 100));
     nodelinkfd.update();
 
     //Render the initial movies table with 50 arbitrary movies
-    window.movieTable = new MovieTable(movies.slice(0, 50));
+    window.movieTable = new MovieTable(initialMovies.slice(0, 100));
     movieTable.create();
     movieTable.update();
-
 });
 
 

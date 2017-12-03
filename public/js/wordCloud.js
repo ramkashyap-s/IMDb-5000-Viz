@@ -2,7 +2,7 @@
 class WordCloud{
 
     constructor(movies){
-        this.movies = movies.slice(0,20);
+        this.movies = movies.slice(0,15);
 
     }
 
@@ -25,7 +25,7 @@ update(){
 
         //process data and collect similar words
         this.movies.forEach((movie) => {
-                let plotkeywords = movie["genres"].split("|");
+                let plotkeywords = movie["plot_keywords"].split("|");
                 plotkeywords.forEach(function (plotword) {
                     let wordInList = wordExists(plotword.trim())
                     if(!wordInList){
@@ -46,7 +46,7 @@ update(){
     d3v3.layout.cloud().size([800, 300])
         .words(frequency_list)
         .rotate(0)
-        .fontSize(function(d) { return d.size*2; })
+        .fontSize(function(d) { return d.size*5; })
         .on("end", draw)
         .start();
 

@@ -7,10 +7,9 @@ class Filters {
      * @param
 
      */
-    constructor (movies) {
+    constructor () {
 
         // Initializes the svg elements required for this chart
-        this.movies = movies;
         this.margin = {top: 10, right: 20, bottom: 30, left: 50};
         let filters = d3.select("#filters");
 
@@ -112,10 +111,15 @@ class Filters {
             if (s == null) {
                 //handle.attr("display", "none");
                 let mousex = d3.mouse(this)[0];
-                //with initial load of page set rating to a range of 7 to 8
+                //with initial load of page set year to a range of 2000 to 2016
                 if(isNaN(mousex)){
                     //let gend = gYearBrush.node().getBoundingClientRect()
-                    gYearBrush.call(yearbrush.move, [417.33331298828136 , 495.33331298828125]);
+                    //console.log(xyear(2010));
+                    gYearBrush.call(yearbrush.move, [xyear(2000) , xyear(2016)]);
+                    let start = 2000;
+                    let end = 2016;
+                    selectedYears.push({start,end});
+                    updateYearsText(start, end);
                 }
                 //if selection == null
                 else{
@@ -125,10 +129,19 @@ class Filters {
                 //let sx = s.map(xyear.invert);
                 let start = Math.round(xyear.invert(s[0]));
                 let end = Math.round(xyear.invert(s[1]));
-                selectedYears = [];
                 selectedYears.push({start, end});
+                updateYearsText(start, end);
                 handle.attr("display", null).attr("transform", function(d, i) { return "translate(" + s[i] + "," + that.svgHeight /4 + ")"; });
             }
+        }
+        
+        function updateYearsText(start, end) {
+            let yearsText = document.getElementById("selectedYears");
+
+            if(start == end)
+                yearsText.innerText = "Selected Year(s): " + start;
+            else
+                yearsText.innerText = "Selected Year(s): " + start + " to " + end;
         }
 
         //ratings slider
@@ -196,6 +209,7 @@ class Filters {
 
         function ratingBrushMoved() {
             let s = d3.event.selection;
+
             if (s == null) {
                 //ratingHandle.attr("display", "none");
                 //circle.classed("active", false);
@@ -203,7 +217,12 @@ class Filters {
 
                 //with initial load of page set rating to a range of 7 to 8
                 if(isNaN(mousex)){
-                    gRatingBrush.call(ratingBrush.move, [417.33331298828136 , 495.33331298828125]);
+                    //gRatingBrush.call(ratingBrush.move, [417.33331298828136 , 495.33331298828125]);
+                    gRatingBrush.call(ratingBrush.move, [xrating(8.2) , xrating(9.5)]);
+                    let start = 8.2;
+                    let end = 9.5;
+                    selectedRatings.push({start , end});
+                    updateRatingsText(start, end);
                 }
                 //if selection == null
                 else{
@@ -215,12 +234,20 @@ class Filters {
             else{
                 let start = Math.round(xrating.invert(s[0]) * 10) / 10;
                 let end = Math.round(xrating.invert(s[1]) * 10) / 10;
-                selectedRatings = [];
                 selectedRatings.push({start, end});
+                updateRatingsText(start, end);
                 ratingHandle.attr("display", null).attr("transform", function(d, i) { return "translate(" + s[i] + "," + that.svgHeight /4 + ")"; });
             }
         }
 
+        function updateRatingsText(start, end) {
+            let yearsText = document.getElementById("selectedRatings");
+
+            if(start == end)
+                yearsText.innerText = "Selected Rating(s): " + start;
+            else
+                yearsText.innerText = "Selected Rating(s): " + start + " to " + end;
+        }
 
         //---------------//genre checkboxes //---------------//
         let genresvg = d3.select("#genreCheckBox").append("svg")
