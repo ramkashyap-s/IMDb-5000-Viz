@@ -7,9 +7,9 @@ PROJECT REPOSITORY URL: https://github.com/ramkashyap-s/dataviscourse-pr-movies-
 
 PROJECT WEBSITE URL: https://ramkashyap-s.github.io/dataviscourse-pr-movies-viz/
 
-PROJECT SCREENCAST URL: https://www.youtube.com/
+PROJECT SCREENCAST URL: https://youtu.be/Dl6pwKKrH-g
 
-##SUBMISSION DETAILS:
+##SUBMISSION DETAILS: 
 
 Our submission is made on the GIT HUB repository and it's access link is mentioned above.
 
