@@ -289,7 +289,6 @@ class NodeLinkFD{
                 .on('mouseout', tip.hide)
                 .on('dblclick', connectedNodes); //Added code;
 
-
         // Binding data, to the simulation...
         simulation.nodes(this.nodes);
 
@@ -365,8 +364,15 @@ class NodeLinkFD{
         function connectedNodes() {
 
             if (flag == 0) {
-                //Reduce the opacity of all nodes except the neighbouring nodes
+
                 let d = d3.select(this).node().__data__;
+
+                if(d["group"] == 0)   //If selected node is a movie
+                {
+                    //console.log(d["id"]);
+                }
+
+                //Reduce the opacity of all nodes except the neighbouring nodes
                 nodes.style("opacity", function (o) {
                     return ((isConnected(d, o) || isConnected(o, d)) ? 1 : 0.1);
                 });

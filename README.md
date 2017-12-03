@@ -26,7 +26,7 @@ Our submission is made on the GIT HUB repository and it's access link is mention
 The js folder contains:
 (i). trend_script
 (ii). actorDirectorStats.js
-(iii). budgetVsRating.js
+(iii). scatterPlot.js
 (iv). explore_script.js
 (v). filters.js
 (vi). movieTable.js

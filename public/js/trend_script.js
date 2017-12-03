@@ -12,13 +12,28 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     window.actorDirectorStats = new ActorDirectorStats("Actor", "Tom Hanks", getMoviesFor("actor", "Tom Hanks"), "imdb_score");
     actorDirectorStats.plot();
 
+    let plotMovies = movies.map((d) => {
+        return {"imdb_score": d["imdb_score"], "gross": d["gross"], "duration": d["duration"],
+            "num_user_for_reviews": d["num_user_for_reviews"], "movie_facebook_likes": d["movie_facebook_likes"]};
+    });
 
-    let moviesGroupedByRating = d3.nest()
-        .key( (d) => { return d["imdb_score"]; } ).sortKeys(d3.ascending)
-        .entries(movies);
+    //Plot budget Vs rating
+    let budgetVsRating = new ScatterPlot(plotMovies);
+    budgetVsRating.plot("budgetVsRating", "gross", "Gross");
 
-    let budgetVsRating = new BudgetVsRating(moviesGroupedByRating);
-    budgetVsRating.plot();
+    //Plot number of user reviews Vs rating
+    let reviewsVsRating = new ScatterPlot(plotMovies);
+    reviewsVsRating.plot("reviewsVsRating", "num_user_for_reviews", "Number of user reviews");
+
+    /*
+    //Plot duration Vs rating
+    let durationVsRating = new ScatterPlot(plotMovies);
+    durationVsRating.plot("durationVsRating", "duration", "Duration");
+
+    //Plot Facebook likes Vs rating
+    let likesVsRating = new ScatterPlot(plotMovies);
+    reviewsVsRating.plot("likesVsRating", "movie_facebook_likes", "Facebook likes");
+    */
 });
 
 

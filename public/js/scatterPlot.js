@@ -1,38 +1,33 @@
 
-class BudgetVsRating
+class ScatterPlot
 {
-    constructor(moviesGroupedByRating)
+    constructor(movies)
     {
-        this.ratings = moviesGroupedByRating;
+        this.movies = movies;
     }
 
-    plot()
+    plot(plotDivId, yAttribute, yLabel)
     {
         let plotPoints = [];
         let cx, cy;
-        let minRating = 1.6, maxRating = 9.5, minBudget = 218, maxBudget = 12215500000;
 
-        (this.ratings).forEach(function (rating) {
+        (this.movies).forEach((movie) => {
 
-            (rating.values).forEach(function (movie) {
+            cx = parseFloat(movie["imdb_score"]);
+            cy = parseInt(movie[yAttribute]);
 
-                cx = parseFloat(rating.key);
-                //cy = parseInt(movie.budget);
-                cy = parseInt(movie.num_user_for_reviews);
-
-                if(!isNaN(cx) && !isNaN(cy))
-                    plotPoints.push({ "cx": cx, "cy": cy }) //Extract and store the points to be plotted
-            });
+            if(!isNaN(cx) && !isNaN(cy))
+                plotPoints.push({ "cx": cx, "cy": cy }) //Extract and store the points to be plotted
         });
 
-        let budgetVsRating_Div = d3.select("#budgetVsRating");
+        let plotDiv = d3.select("#" + plotDivId);
 
-        let margin = {top: 20, right: 20, bottom: 30, left: 110},
-            svgBounds = budgetVsRating_Div.node().getBoundingClientRect(),
+        let margin = {top: 20, right: 20, bottom: 50, left: 110},
+            svgBounds = plotDiv.node().getBoundingClientRect(),
             width = svgBounds.width - margin.left - margin.right,
             height = 450 - margin.top - margin.bottom;
 
-        let svg = budgetVsRating_Div.append("svg")
+        let svg = plotDiv.append("svg")
             .attr("width", svgBounds.width)
             .attr("height", 450 + margin.top + margin.bottom);
 
@@ -42,21 +37,26 @@ class BudgetVsRating
             .domain(d3.extent(plotPoints, (d) => { return d.cx}))
             .range([0, width]);
 
+        xScale.nice();
+
         let yScale = d3.scaleLinear()
             .domain(d3.extent(plotPoints, (d) => { return d.cy}))
             .range([height, 0]);
+
+        yScale.nice();
 
         //Add the y Axis
         g.append("g")
             .call(d3.axisLeft(yScale));
 
         svg.append("text")
+            .attr("class", "font-weight-bold")
             .attr("fill", "#000")
             .attr("transform", "rotate(-90)")
             .attr("x", -height/2)
             .attr("dy", "1.50em")
             .attr("text-anchor", "middle")
-            .text("number of user reviews");
+            .text(yLabel);
 
         //Add the x Axis
         g.append("g")
@@ -64,6 +64,7 @@ class BudgetVsRating
             .call(d3.axisBottom(xScale));
 
         svg.append("text")
+            .attr("class", "font-weight-bold")
             .attr("fill", "#000")
             .attr("x", width/1.5)
             .attr("y", height*1.2)
@@ -75,6 +76,9 @@ class BudgetVsRating
             .data(plotPoints);
 
         let pointsEnter = points.enter().append("circle")
+            .attr("transform", "translate(" + 0 + "," + (-3) + ")")
+            .attr("fill", "#000")
+            .attr("opacity", 0.5)
             .attr("r", 4)
             .attr("cx", (d) => { return xScale(d.cx); })
             .attr("cy", (d) => { return yScale(d.cy); });

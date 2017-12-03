@@ -98,7 +98,13 @@ class ActorDirectorStats
             .data(this.movies);
 
         //Initialize tooltip
-        let tip = d3.tip().attr("class", "d3-tip-node").html((d) => { return d["movie_title"].trim() + ": " + d[this.attribute]; });
+        let tip = d3.tip().attr("class", "d3-tip-node").html((d) => {
+
+            if(this.attribute == "imdb_score")
+                return d["movie_title"].trim() + ": " + parseFloat(d[this.attribute]);
+            else
+                return d["movie_title"].trim() + ": " + parseInt(d[this.attribute]).toLocaleString();
+        });
 
         let pointsEnter = points.enter().append("circle");
         points.exit().remove();

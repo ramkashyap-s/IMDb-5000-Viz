@@ -76,9 +76,12 @@ class MovieTable
 
         tbodyColumns = tbodyColumns.merge(tbodyColumnsEnter)
             .style("opacity", 0)
-            .text( (d) => {
+            .text( (d, i) => {
                 if(!d)
                     return "N/A";
+
+                if(i == 4)  //Budget column
+                    return parseInt(d).toLocaleString();
 
                 return d;
             })
