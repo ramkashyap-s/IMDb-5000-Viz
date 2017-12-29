@@ -1,3 +1,11 @@
+d3.csv("data/correlation_matrix.csv", function (error, rows) {
+    if (error) throw error;
+    let corrMatrix = new CorrelationMatrix(rows);
+    corrMatrix.create();
+
+});
+
+
 d3.csv("data/movie_metadata.csv", function (error, movies) {
     if (error) throw error;
 
@@ -21,13 +29,14 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
         return {"imdb_score": d["imdb_score"], "gross": d["gross"], "num_user_for_reviews": d["num_user_for_reviews"]};
     });
 
+    window.scPlot = new ScatterPlot(plotMovies);
     //Plot gross Vs rating
-    let grossVsRating = new ScatterPlot(plotMovies);
-    grossVsRating.plot("grossVsRating", "gross", "Gross");
+    // let grossVsRating = new ScatterPlot(plotMovies);
+    // grossVsRating.plot("grossVsRating", "gross", "Gross");
 
     //Plot number of user reviews Vs rating
-    let reviewsVsRating = new ScatterPlot(plotMovies);
-    reviewsVsRating.plot("reviewsVsRating", "num_user_for_reviews", "Number of user reviews");
+    // let reviewsVsRating = new ScatterPlot(plotMovies);
+    // reviewsVsRating.plot("reviewsVsRating", "num_user_for_reviews", "Number of user reviews");
 
     /*
     //Plot duration Vs rating
