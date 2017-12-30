@@ -11,8 +11,8 @@ class CorrelationMatrix {
         let svgBounds = divTiles.node().getBoundingClientRect();
         this.svgWidth = svgBounds.width - this.margin.left - this.margin.right;
         this.svgHeight = this.svgWidth;
-        this.svgWidth = 500;
-        this.svgHeight = 500;
+        // this.svgWidth = 500;
+        // this.svgHeight = 500;
 
         //creates svg elements within the div
         this.svg = divTiles.append("svg")
@@ -53,7 +53,7 @@ class CorrelationMatrix {
                 col = col + 1;
             },this);
 
-        console.log(data);
+        //console.log(data);
         let domain = d3.set(data.map(function (d) {
                 return d.x
             })).values();
@@ -66,7 +66,7 @@ class CorrelationMatrix {
                 .domain(domain),
             xSpace = x.range()[1] - x.range()[0],
             ySpace = y.range()[1] - y.range()[0];
-        console.log(xSpace +"xspace-yspace"+ ySpace);
+        //console.log(xSpace +"xspace-yspace"+ ySpace);
         let num = Math.sqrt(data.length);
         let colorScale = d3.scaleLinear()
                 .domain([-1, 0, 1])
@@ -76,7 +76,7 @@ class CorrelationMatrix {
 
         let rect = cor.selectAll('rect').data(data);
         let newrect= rect.enter().append("rect");
-        
+
         rect.exit().remove;
 
         rect = newrect.merge(rect);
@@ -101,9 +101,12 @@ class CorrelationMatrix {
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide)
             .on("click", function(d){
+                //console.log(this);
+                rect.classed("highlight-rect",false);
+                d3.select(this).classed("highlight-rect",true);
                 // console.log(d.x);
                 // console.log(d.y);
-                scPlot.plot("grossVsRating", d.x, d.x);
+                scPlot.plot(d.x, d.x, d.y, d.y);
             })
 
 

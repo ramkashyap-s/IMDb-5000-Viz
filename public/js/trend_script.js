@@ -1,9 +1,4 @@
-d3.csv("data/correlation_matrix.csv", function (error, rows) {
-    if (error) throw error;
-    let corrMatrix = new CorrelationMatrix(rows);
-    corrMatrix.create();
 
-});
 
 
 d3.csv("data/movie_metadata.csv", function (error, movies) {
@@ -20,6 +15,14 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     window.actorDirectorStats = new ActorDirectorStats("Actor", "Tom Hanks", getMoviesFor("actor", "Tom Hanks"), "imdb_score");
     actorDirectorStats.plot();
 
+    d3.csv("data/correlation_matrix.csv", function (error, rows) {
+        if (error) throw error;
+        let corrMatrix = new CorrelationMatrix(rows);
+        corrMatrix.create();
+
+    });
+
+
     //Render the wordCloud for the default actor
     //let wordCloud = new WordCloud(getMoviesFor("actor", "Tom Hanks"));
     //wordCloud.update();
@@ -29,7 +32,7 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
         return {"imdb_score": d["imdb_score"], "gross": d["gross"], "num_user_for_reviews": d["num_user_for_reviews"]};
     });
 
-    window.scPlot = new ScatterPlot(plotMovies);
+    window.scPlot = new ScatterPlot();
     //Plot gross Vs rating
     // let grossVsRating = new ScatterPlot(plotMovies);
     // grossVsRating.plot("grossVsRating", "gross", "Gross");

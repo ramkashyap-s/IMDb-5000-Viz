@@ -107,4 +107,12 @@
     stroke: #999;
     stroke-opacity: .6;
 }
-
+/*Highlight */
+.highlight-rect {
+    stroke-width:2;
+    stroke:rgb(128,0,0);
+}
+.highlight-circle {
+    stroke-width:2;
+    stroke:rgb(128,0,0);
+}
