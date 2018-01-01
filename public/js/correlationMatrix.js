@@ -18,7 +18,8 @@ class CorrelationMatrix {
         this.svg = divTiles.append("svg")
             .attr("width",this.svgWidth)
             .attr("height",this.svgHeight)
-            .attr("transform", "translate(" + this.margin.left/4 + ",0)")
+            //.attr("transform", "translate(" + this.margin.left/4 + ",0)")
+
     }
 
     create() {
@@ -82,17 +83,22 @@ class CorrelationMatrix {
         rect = newrect.merge(rect);
         //console.log(that.svgWidth)
         rect.attr('x', function (d) {
-                return (that.svgWidth/(num+1))*d.col;
+                return (that.svgWidth/(num+2))*d.col;
              })
             .attr('y', function (d) {
-                    return (that.svgHeight / (num + 1)) * d.row;
+                //set default plot to row = 8, col = 1
+                if(d.row === 8 && d.col === 1){
+                    d3.select(this).classed("highlight-rect",true);
+                    scPlot.plot(d.x, d.x, d.y, d.y);
+                }
+                    return (that.svgHeight / (num + 2)) * d.row;
             })
             .attr("width", function(d){
                 //console.log(that.svgWidth/(num+1));
-                    return that.svgWidth / (num + 1)
+                    return that.svgWidth / (num + 2)
             })
             .attr("height", function(d){
-                    return that.svgHeight/(num+1)
+                    return that.svgHeight/(num+2)
             })
             .attr("fill",function (d) {
                     return colorScale(d.value);
@@ -107,24 +113,24 @@ class CorrelationMatrix {
                 // console.log(d.x);
                 // console.log(d.y);
                 scPlot.plot(d.x, d.x, d.y, d.y);
-            })
+            });
 
 
         //Legend
-        var aS = d3.scaleLinear()
-            .range([-this.margin.top + 5, this.svgHeight + this.margin.bottom - 5])
+        let aS = d3.scaleLinear()
+            .range([0, this.svgHeight - this.margin.bottom])
             .domain([1, -1]);
 
-        var yA = d3.axisRight(aS)
-//            .tickPadding(7);
+        let yA = d3.axisRight(aS)
+            .tickPadding(7);
 
-        var aG = this.svg.append("g")
-            .attr("class", "y axis")
+        let aG = this.svg.append("g")
+            // .attr("class", "y axis")
             .call(yA)
-            .attr("transform", "translate(" + (this.svgWidth + this.margin.right / 2) + " ,0)")
+            .attr("transform", "translate(" + (this.svgWidth - (this.margin.right*2)) + " ,4)")
 
-        var iR = d3.range(-1, 1.01, 0.01);
-        var h = this.svgHeight / iR.length + 3;
+        let iR = d3.range(-1.0, 1.01, 0.01);
+        let h = this.svgHeight / iR.length + 3;
         iR.forEach(function (d) {
             aG.append('rect')
                 .style('fill', colorScale(d))

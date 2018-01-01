@@ -33,6 +33,8 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
     });
 
     window.scPlot = new ScatterPlot();
+    // scPlot.plot("num_critic_for_reviews", "movie_facebook_likes", "num_critic_for_reviews", "movie_facebook_likes");
+
     //Plot gross Vs rating
     // let grossVsRating = new ScatterPlot(plotMovies);
     // grossVsRating.plot("grossVsRating", "gross", "Gross");
