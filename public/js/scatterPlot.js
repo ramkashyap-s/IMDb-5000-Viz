@@ -22,10 +22,18 @@ class ScatterPlot
     {
         //Set up tooltip
         let tip = d3.tip()
-            .attr('class', 'd3-tip')
+            .attr('class', 'tip-different')
             .offset([-10, 0])
             .html(function (d) {
-                return   d.xaxis +": "+d.cx.toLocaleString() + d.yaxis +": "+ d.cy.toLocaleString() +"Movie: "+ d.title;
+                let text = "";
+                text = "<ul>";
+                text +=  "<li> "+d.xaxis +": "+d.cx.toLocaleString() + "</li>";
+                text +=  "<li> "+ d.yaxis +": "+ d.cy.toLocaleString() + "</li>";
+                text +=  "<li> "+ "Movie: "+ d.title + "</li>";
+                text += "</ul>";
+                return text
+
+                // return   d.xaxis +": "+d.cx.toLocaleString() + d.yaxis +": "+ d.cy.toLocaleString() +"Movie: "+ d.title;
             });
 
         //console.log(xAttribute+": "+yAttribute)

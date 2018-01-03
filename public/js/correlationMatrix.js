@@ -25,10 +25,15 @@ class CorrelationMatrix {
     create() {
         //Set up tooltip
         let tip = d3.tip()
-            .attr('class', 'd3-tip')
+            .attr('class', 'tip-different')
             .offset([-10, 0])
             .html(function (d) {
-                return   "Correlation: "+ d.value ;
+                let text = "";
+                text = "<ul>";
+                text +=  "<li> "+d.x + " vs " + d.y + "</li>";
+                text +=  "<li> "+"Correlation: "+ d.value + "</li>";
+                text += "</ul>";
+                return text
             });
 
         let data = [];
