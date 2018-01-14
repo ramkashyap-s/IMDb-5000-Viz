@@ -1,5 +1,4 @@
-# dataviscourse-pr-movies-viz
-
+Visualizing IMDb 5000 movie dataset
 
 PROJECT MEMBERS: Musaddiq Mohammed(u1068996) Ram Kashyap S (u1082810)
 
