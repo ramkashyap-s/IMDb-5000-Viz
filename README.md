@@ -4,7 +4,7 @@ PROJECT MEMBERS: Musaddiq Mohammed(u1068996) Ram Kashyap S (u1082810)
 
 PROJECT REPOSITORY URL: https://github.com/ramkashyap-s/dataviscourse-pr-movies-viz
 
-PROJECT WEBSITE URL: https://ramkashyap-s.github.io/dataviscourse-pr-movies-viz/
+PROJECT WEBSITE URL: https://ramkashyap-s.github.io/IMDb-5000-Viz/
 
 PROJECT SCREENCAST URL: https://youtu.be/Dl6pwKKrH-g
 
