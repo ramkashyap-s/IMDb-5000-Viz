@@ -8,6 +8,8 @@ PROJECT WEBSITE URL: https://ramkashyap-s.github.io/IMDb-5000-Viz/
 
 PROJECT SCREENCAST URL: https://youtu.be/Dl6pwKKrH-g
 
+Works on Chrome with latest version, incompatible with Firefox.
+
 ## SUBMISSION DETAILS: 
 
 Our submission is made on the GIT HUB repository and it's access link is mentioned above.
