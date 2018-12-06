@@ -32,7 +32,7 @@ d3.csv("data/movie_metadata.csv", function (error, movies) {
         return {"imdb_score": d["imdb_score"], "gross": d["gross"], "num_user_for_reviews": d["num_user_for_reviews"]};
     });
 
-    window.scPlot = new ScatterPlot();
+//     window.scPlot = new ScatterPlot();
     // scPlot.plot("num_critic_for_reviews", "movie_facebook_likes", "num_critic_for_reviews", "movie_facebook_likes");
 
     //Plot gross Vs rating
